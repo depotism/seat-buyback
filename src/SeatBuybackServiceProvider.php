@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 namespace H4zz4rdDev\Seat\SeatBuyback;
 
-use H4zz4rdDev\Seat\SeatBuyback\Factories\PriceProviderFactory;
+// use H4zz4rdDev\Seat\SeatBuyback\Factories\PriceProviderFactory;
 use H4zz4rdDev\Seat\SeatBuyback\Services\DiscordService;
 use H4zz4rdDev\Seat\SeatBuyback\Services\ItemService;
 use H4zz4rdDev\Seat\SeatBuyback\Services\SettingsService;
@@ -77,14 +77,14 @@ class SeatBuybackServiceProvider extends AbstractSeatPlugin
             return new SettingsService();
         });
 
-        // Price Provider Factory
-        $this->app->singleton(PriceProviderFactory::class, function ($app) {
-            return new PriceProviderFactory($app->make(SettingsService::class));
-        });
+        // // Price Provider Factory
+        // $this->app->singleton(PriceProviderFactory::class, function ($app) {
+        //     return new PriceProviderFactory($app->make(SettingsService::class));
+        // });
 
-        // Settings Service
+        // Item Service
         $this->app->singleton(ItemService::class, function ($app) {
-            return new ItemService($app->make(PriceProviderFactory::class));
+            return new ItemService($app->make(SettingsService::class));
         });
 
         // Discord Service

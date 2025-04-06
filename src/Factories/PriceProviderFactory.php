@@ -23,10 +23,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 namespace H4zz4rdDev\Seat\SeatBuyback\Factories;
 
 use H4zz4rdDev\Seat\SeatBuyback\Exceptions\SettingsServiceException;
-use H4zz4rdDev\Seat\SeatBuyback\Provider\EveMarketerPriceProvider;
-use H4zz4rdDev\Seat\SeatBuyback\Provider\EvePraisalPriceProvider;
+// use H4zz4rdDev\Seat\SeatBuyback\Provider\EveMarketerPriceProvider;
+// use H4zz4rdDev\Seat\SeatBuyback\Provider\EvePraisalPriceProvider;
 use H4zz4rdDev\Seat\SeatBuyback\Provider\IPriceProvider;
 use H4zz4rdDev\Seat\SeatBuyback\Services\SettingsService;
+use RecursiveTree\Seat\PricesCore\Facades\PriceProviderSystem;
+use RecursiveTree\Seat\PricesCore\Models\PriceProviderInstance;
 
 /**
  * Class PriceProviderFactory
@@ -49,14 +51,15 @@ class PriceProviderFactory
         $priceProvider = null;
 
         try {
-            switch ((int)$this->settingsService->get('admin_price_provider')) {
-                case 1:
-                    $priceProvider = new EveMarketerPriceProvider($this->settingsService);
-                    break;
-                case 2:
-                    $priceProvider = new EvePraisalPriceProvider($this->settingsService);
-                    break;
-            }
+
+            // switch ((int)$this->settingsService->get('admin_price_provider')) {
+            //     case 1:
+            //         $priceProvider = new EveMarketerPriceProvider($this->settingsService);
+            //         break;
+            //     case 2:
+            //         $priceProvider = new EvePraisalPriceProvider($this->settingsService);
+            //         break;
+            // }
         } catch (SettingsServiceException $e) {
             throw new SettingsServiceException(trans('buyback::global.error'));
         }

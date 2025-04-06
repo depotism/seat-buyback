@@ -8,15 +8,16 @@
 @endpush
 
 @section('full')
+    <form action="{{ route('buyback.item.market.add') }}" method="post" id="admin-market-config" name="admin-market-config">
+    {{ csrf_field() }}
     <div class="row">
         <div class="col-6">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">{{ trans('buyback::global.admin_title') }}</h3>
                 </div>
-                <form action="{{ route('buyback.item.market.add') }}" method="post" id="admin-market-config" name="admin-market-config">
+                <!-- <form action="{{ route('buyback.item.market.add') }}" method="post" id="admin-market-config" name="admin-market-config"> -->
                     <div class="card-body">
-                        {{ csrf_field() }}
                         <p>{{ trans('buyback::global.admin_description') }}</p>
                         <div class="form-group row">
                             <label class="col-md-4 col-form-label" for="admin_price_cache_time">{{ trans('buyback::global.admin_item_select_label') }}</label>
@@ -27,6 +28,17 @@
                                 </p>
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label" for="defaultPriceProvider">{{ trans('buyback::global.admin_setting_price_provider_label') }}</label>
+                            <div class="col-md-6">
+                            @include("pricescore::utils.instance_selector",["id"=>"priceprovider","name"=>"defaultPriceProvider","instance_id"=>0])
+                                <p class="form-text text-muted mb-0">
+                                {{ trans('buyback::global.admin_setting_price_provider_description') }}
+                                </p>
+                            </div>
+                        </div>
+                        
                         <div class="form-group row">
                             <label class="col-md-4 col-form-label" for="admin-market-operation"><i class="fas fa-arrow-down"></i>/<i class="fas fa-arrow-up"></i>{{ trans('buyback::global.admin_item_jita_label') }}</label>
                             <div class="col-md-6">
@@ -75,10 +87,31 @@
                             </div>
                         </div>
                     </div>
-                </form>
+                <!-- </form> -->
             </div>
         </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <div id="overlay" style="border-radius: 5px">
+                        <div class="w-100 d-flex justify-content-center align-items-center">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    <form action="{{ route('buyback.check') }}" method="post" id="item-check" name="item-check">
+                        <div class="form-group">
+                            <label for="items">{{ trans('buyback::global.admin_item_multiline_title') }}</label>
+                            <p>{{ trans('buyback::global.admin_item_multiline_description') }}</p>
+                            <textarea class="w-100" name="items" rows="10"></textarea>
+                        </div>
+
+                    </form>
+                </div>
+            </div>            
+        </div>
     </div>
+    </form>
+
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -92,6 +125,7 @@
                         <th class="text-center"><i class="fas fa-arrow-down"></i>/<i class="fas fa-arrow-up">{{ trans('buyback::global.admin_group_table_jita') }}</th>
                         <th class="text-center">{{ trans('buyback::global.admin_group_table_percentage') }}</th>
                         <th class="text-center">{{ trans('buyback::global.admin_group_table_price') }}</th>
+                        <th class="text-center">{{ trans('buyback::global.admin_group_table_provider') }}</th>
                         <th>{{ trans('buyback::global.admin_group_table_market_name') }}</th>
                         <th class="text-center">{{ trans('buyback::global.admin_group_table_actions') }}</th>
                         </thead>
@@ -105,6 +139,7 @@
                                     <td class="text-center align-middle">{!! $config->marketOperationType == 0 ? '<i class="fas fa-arrow-down"></i>' : '<i class="fas fa-arrow-up"></i>' !!}</td>
                                     <td class="text-center align-middle">{{ ($config->price <= 0) ? $config->percentage . " %" : "-" }}</td>
                                     <td class="text-center align-middle">{{ ($config->price > 0) ? number_format($config->price,0,',', '.') . " ISK" : "-"}}</td>
+                                    <td class="text-center align-middle">{{ $config->provider }}</td>
                                     <td class="align-middle">{{ $config->groupName }}</td>
                                     <td class="text-center mb-4 mt-4 align-middle"><button class="btn btn-danger btn-xs form-control" id="submit" type="submit"><i class="fas fa-trash-alt"></i>{{ trans('buyback::global.admin_group_table_button') }}</button></td>
                                     </form>

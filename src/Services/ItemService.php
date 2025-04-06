@@ -24,26 +24,43 @@ namespace H4zz4rdDev\Seat\SeatBuyback\Services;
 
 use H4zz4rdDev\Seat\SeatBuyback\Exceptions\ItemParserBadFormatException;
 use H4zz4rdDev\Seat\SeatBuyback\Exceptions\SettingsServiceException;
-use H4zz4rdDev\Seat\SeatBuyback\Factories\PriceProviderFactory;
+// use H4zz4rdDev\Seat\SeatBuyback\Factories\PriceProviderFactory;
 use H4zz4rdDev\Seat\SeatBuyback\Helpers\PriceCalculationHelper;
-use H4zz4rdDev\Seat\SeatBuyback\Provider\IPriceProvider;
+// use H4zz4rdDev\Seat\SeatBuyback\Provider\IPriceProvider;
+use H4zz4rdDev\Seat\SeatBuyback\Services\SettingsService;
 use Illuminate\Support\Facades\DB;
 use Seat\Eveapi\Models\Sde\InvType;
+use RecursiveTree\Seat\PricesCore\Facades\PriceProviderSystem;
+use RecursiveTree\Seat\PricesCore\Models\PriceProviderInstance;
+use RecursiveTree\Seat\TreeLib\Parser\ItemListParser;
+use RecursiveTree\Seat\TreeLib\Parser\Parser;
+use H4zz4rdDev\Seat\SeatBuyback\Parser\AssetWindowParser;
+use H4zz4rdDev\Seat\SeatBuyback\Parser\PriceableEveItem;
+use RecursiveTree\Seat\TreeLib\Items\EveItem;
+use H4zz4rdDev\Seat\SeatBuyback\Models\BuybackPriceData;
+use H4zz4rdDev\Seat\SeatBuyback\Models\BuyBackPriceProvider;
+use H4zz4rdDev\Seat\SeatBuyback\Models\BuybackMarketConfig;
 
 /**
  * Class ItemService
  */
 class ItemService
 {
-    private $priceProvider;
+    // private $priceProvider;
+    private $settingsService;
 
     /**
      * @throws SettingsServiceException
      */
-    public function __construct(PriceProviderFactory $priceProviderFactory)
+    // public function __construct(PriceProviderFactory $priceProviderFactory)
+    public function __construct(SettingsService $settingsService)
     {
-        $this->priceProvider = $priceProviderFactory->getPriceProvider();
+        $this->settingsService = $settingsService;
+        // $this->priceProvider = $priceProviderFactory->getPriceProvider();
     }
+
+
+    protected const BIG_NUMBER_REGEXP = "(\d*\.?\d*)";//"(?:\d+(?:[’\s+,]\d\d\d)*(?:[\.,]\d\d)?)";
 
     /**
      * @return array|null
@@ -55,20 +72,57 @@ class ItemService
             return null;
         }
 
-        $parsedRawData = $this->parseRawData($item_string);
+        Parser::registerParser(AssetWindowParser::class);
+        $parser_result = Parser::parseItems($item_string, PriceableEveItem::class);
 
-        foreach ($parsedRawData as $key => $item) {
-            $priceData = $this->priceProvider->getItemPrice($item["typeID"]);
-
-            if($priceData == null) {
-                return null;
+        // i know it is not nice. but we need to split the results because we have different price providers now. 
+        $sorted = [];
+        foreach ($parser_result->items as $item) {
+            $marketConfig = BuybackMarketConfig::where('typeId', $item->getTypeID())->first();
+            
+            if ($marketConfig == null) {
+                continue;
             }
-
-            $parsedRawData[$key]["price"] = $priceData->getItemPrice();
-            $parsedRawData[$key]["sum"] = PriceCalculationHelper::calculateItemPrice($item["typeID"],
-                $parsedRawData[$key]["quantity"], $priceData);
+            $provider = $marketConfig->provider;
+            if (array_key_exists($provider, $sorted)) {
+                $sorted[$provider]->push($item);
+            } else {
+                $sorted[$provider] = collect([$item]);
+            }
+        }
+        //dd($sorted); //
+        
+        // loop through all price providers
+        foreach ($sorted as $provider => $items) {
+            try {
+                PriceProviderSystem::getPrices((int)$provider, $items);
+            } catch (PriceProviderException $e){
+                // dd($e);
+                return redirect()->back()->with('error',$e->getMessage());
+            }
+            
+            // dd($parser_result);
+            
+            foreach ($items as $item) {
+                //dd(get_class($item));
+                // dd($item);
+                // $priceData = $this->priceProvider->getItemPrice($item["typeID"]);
+                // if($priceData == null) {
+                //     return null;
+                // }
+                $key = $item->getTypeID();
+    
+                $parsedRawData[$key]["price"] = $item->price;//$priceData->getItemPrice();
+                $parsedRawData[$key]["name"] = $item->getTypeName();
+                $parsedRawData[$key]["quantity"] = $item->amount;
+                $parsedRawData[$key]["typeID"] = $item->getTypeID();
+                $parsedRawData[$key]["priceProvider"] = $provider;
+                $parsedRawData[$key]["sum"] = PriceCalculationHelper::calculateItemPrice($item->getTypeID(),
+                    $item->amount, new BuybackPriceData($item->getTypeID(), $item->price));
+            }
         }
 
+        //  dd($parsedRawData);
         return $this->categorizeItems($parsedRawData);
     }
 
@@ -90,19 +144,18 @@ class ItemService
                     'ig.GroupName as groupName',
                     'ig.GroupID as groupID',
                     'bmc.percentage',
-                    'bmc.marketOperationType'
+                    'bmc.marketOperationType',
+                    'bmc.provider'
                 )
-                ->where('it.typeName', '=', $key)
+                ->where('it.typeID', '=', $key)
                 ->first();
 
             if (empty($result)) {
-
                 $parsedItems["ignored"][] = [
-                    'ItemId' => $item["typeID"],
+                    'ItemId' => $key,
                     'ItemName' => $item["name"],
                     'ItemQuantity' => $item["quantity"]
                 ];
-
                 continue;
             }
 
@@ -112,6 +165,7 @@ class ItemService
                 $parsedItems["parsed"][$key]["typeName"] = $item["name"];
                 $parsedItems["parsed"][$key]["typeQuantity"] = $item["quantity"];
                 $parsedItems["parsed"][$key]["typeSum"] = $item["sum"];
+                $parsedItems["parsed"][$key]["provider"] = $result->provider;
                 $parsedItems["parsed"][$key]["groupId"] = $result->groupID;
                 $parsedItems["parsed"][$key]["marketGroupName"] = $result->groupName;
 
@@ -121,7 +175,7 @@ class ItemService
                 ];
             }
         }
-
+        //dd($parsedItems);
         return $parsedItems;
     }
 
@@ -166,6 +220,7 @@ class ItemService
             if (!array_key_exists($item_name, $sorted_item_data)) {
                 $sorted_item_data[$item_name]["name"] = $item_name;
                 $sorted_item_data[$item_name]["typeID"] = $inv_type->typeID;
+                $sorted_item_data[$item_name]["type_id"] = $inv_type->typeID;
                 $sorted_item_data[$item_name]["quantity"] = 0;
                 $sorted_item_data[$item_name]["price"] = 0;
                 $sorted_item_data[$item_name]["sum"] = 0;

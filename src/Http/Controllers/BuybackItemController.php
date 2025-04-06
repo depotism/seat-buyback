@@ -29,6 +29,8 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Seat\Eveapi\Models\Sde\InvType;
 use Seat\Web\Http\Controllers\Controller;
+use H4zz4rdDev\Seat\SeatBuyback\Services\ItemService;
+use H4zz4rdDev\Seat\SeatBuyback\Services\SettingsService;
 
 /**
  * Class BuybackController.
@@ -36,6 +38,25 @@ use Seat\Web\Http\Controllers\Controller;
  * @package H4zz4rdDev\Seat\SeatBuyback\Http\Controllers
  */
 class BuybackItemController extends Controller {
+    /**
+     * @var ItemService
+     */
+    public $itemService;
+
+    /**
+     * @var SettingsService
+     */
+    public $settingsService;
+
+
+    /**
+     * Constructor
+     */
+    public function __construct(ItemService $itemService, SettingsService $settingsService)
+    {
+        $this->itemService = $itemService;
+        $this->settingsService = $settingsService;
+    }
 
     /**
      * @return View
@@ -52,36 +73,96 @@ class BuybackItemController extends Controller {
      */
     public function addMarketConfig(Request $request)
     {
-
+        
         $request->validate([
-            'admin-market-typeId'       => 'required|max:255',
+            'admin-market-typeId'       => 'required_if:items,null',
             'admin-market-operation'    => 'required',
             'admin-market-percentage'   => 'required|numeric|between:0,99.99',
-            'admin-market-price'        => 'required|numeric'
+            'admin-market-price'        => 'required|numeric',
+            'defaultPriceProvider'      => 'required|numeric',
+            'items'                     => 'required_if:admin-market-typeId,""'
         ]);
-
-        $item = BuybackMarketConfig::where('typeId', (int)$request->get('admin-market-typeId'))->first();
-
-        if ($item != null) {
-            return redirect()->route('buyback.item')
-                ->with(['error' => trans('buyback::global.admin_error_config') . $item->typeId]);
+        
+        
+        $multiLine = false;
+        $parsedItems = [];
+        if ($request->get('items') != null) {
+            $parsedItems = $this->itemService->parseEveItemData($request->get('items'));
+            $multiLine = true;
+            
         }
+        // dd($request);
+        
+        if (!$multiLine) {
+            $res = $this->addItemToMarket(
+                (int)$request->get('admin-market-typeId'),
+                (int)$request->get('admin-market-operation'),
+                (int)$request->get('admin-market-percentage'),
+                (int)$request->get("admin-market-price"),
+                (int)$request->get("defaultPriceProvider")
+            );
 
-        $invType = InvType::where('typeID', (int)$request->get('admin-market-typeId'))->first();
+            if (!$res) {
+                return redirect()->route('buyback.item')
+                ->with(['error' => trans('buyback::global.admin_error_config') . $item->typeId]);
+            }
+        } else {
+            // dd($parsedItems);
+            // deleting previous configs
+            foreach ($parsedItems['parsed'] as $typeId => $item) {
+                BuybackMarketConfig::destroy($typeId);
 
-        BuybackMarketConfig::insert([
-            'typeId' => (int)$request->get('admin-market-typeId'),
-            'typeName' => (string)$invType->typeName,
-            'marketOperationType' => (int)$request->get('admin-market-operation'),
-            'groupId' => (int)$invType->groupID,
-            'groupName' => (string)$invType->group->groupName,
-            'percentage' => (int)$request->get('admin-market-percentage'),
-            'price' => (int)$request->get("admin-market-price")
-        ]);
+                // and adding the new config...
+                $res = $this->addItemToMarket(
+                    (int)$typeId,
+                    (int)$request->get('admin-market-operation'),
+                    (int)$request->get('admin-market-percentage'),
+                    (int)$request->get("admin-market-price"),
+                    (int)$request->get("defaultPriceProvider")
+                );                
+            }
+
+            foreach ($parsedItems['ignored'] as $item) {
+                $res = $this->addItemToMarket(
+                    (int)$item['ItemId'],
+                    (int)$request->get('admin-market-operation'),
+                    (int)$request->get('admin-market-percentage'),
+                    (int)$request->get("admin-market-price"),
+                    (int)$request->get("defaultPriceProvider")
+                );    
+            }
+
+        }
+        
 
         return redirect()->route('buyback.item')
             ->with('success', trans('buyback::global.admin_success_market_add'));
     }
+
+
+    private function addItemToMarket(int $typeId, int $marketOperation, int $marketPercentage, int $marketFixedPrice, int $priceProvider) {
+        $item = BuybackMarketConfig::where('typeId', $typeId)->first();
+
+        if ($item != null) {
+            return false;
+        }
+
+        $invType = InvType::where('typeID', $typeId)->first();
+
+        BuybackMarketConfig::insert([
+            'typeId' => $typeId,
+            'typeName' => (string)$invType->typeName,
+            'marketOperationType' => $marketOperation,
+            'groupId' => (int)$invType->groupID,
+            'groupName' => (string)$invType->group->groupName,
+            'percentage' => $marketPercentage,
+            'price' => $marketFixedPrice,
+            'provider' => $priceProvider
+        ]);
+
+        return true;
+    }
+
 
     /**
      * @return mixed
