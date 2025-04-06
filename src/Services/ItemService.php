@@ -123,7 +123,7 @@ class ItemService
                 // give invType to the priceable item
                 $repro_item = new PriceableEveItem($db_item);
                 $repro_item->parent = $item;
-                $repro_item->amount = $item->amount * $db_item->quantity;
+                $repro_item->amount = $item->amount * $db_item->quantity / $item->typeModel->portionSize;
 
                 if (array_key_exists($provider, $repro)) {
                     $repro[$provider]->push($repro_item);
