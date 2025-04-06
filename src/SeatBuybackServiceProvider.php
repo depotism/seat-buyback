@@ -179,7 +179,7 @@ class SeatBuybackServiceProvider extends AbstractSeatPlugin
      */
     public function getPackageRepositoryUrl(): string
     {
-        return 'https://github.com/Depotism/seat-buyback';
+        return 'https://github.com/depotism/seat-buyback';
     }
 
     /**

@@ -5,7 +5,7 @@
 
 A module for [SeAT](https://github.com/eveseat/seat) that makes your life with corporation buyback programs a lot easier.
 
-In case of problems please contact me via EVE-Online message or over the seat discord: `H4zz4rd`
+In case of problems please contact me via EVE-Online message or over the seat discord: `depotism`
 
 ## Screenshots
 ![adminpanel](https://i.imgur.com/1c3sdA6.png)
@@ -53,7 +53,7 @@ Switch to your seat installation directory ( default : /var/www/seat)
 
 ```shell
 sudo -H -u www-data bash -c 'php artisan down'
-sudo -H -u www-data bash -c 'composer require h4zz4rddev/seat-buyback'
+sudo -H -u www-data bash -c 'composer require depotism/seat-buyback'
 sudo -H -u www-data bash -c 'php artisan vendor:publish --force --all'
 sudo -H -u www-data bash -c 'php artisan migrate'
 sudo -H -u www-data bash -c 'php artisan seat:cache:clear'
@@ -66,7 +66,7 @@ sudo -H -u www-data bash -c 'php artisan up'
 Open your .env file and edit the SEAT_PLUGINS variable to include the package.
 ```
 # SeAT Plugins
-SEAT_PLUGINS=h4zz4rddev/seat-buyback
+SEAT_PLUGINS=depotism/seat-buyback
 ```
 After adding the plugin to your .env file run:
 ```
@@ -77,12 +77,12 @@ The plugin should be installed after docker has finished booting.
 ## Update
 To update the plugin to the newest version you can follow the same installation steps but change the composer command to:
 ```shell
-sudo -H -u www-data bash -c 'composer update h4zz4rddev/seat-buyback'
+sudo -H -u www-data bash -c 'composer update depotism/seat-buyback'
 ```
 
 ## Donations
 Donations are always welcome, although not required. If you end up using this module a lot, I'd appreciate a donation.
-You can give ISK or contract PLEX and Ships to `H4zz4rd`.
+You can give ISK or contract PLEX and Ships to `depotism`.
 
 
 
