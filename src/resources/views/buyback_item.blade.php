@@ -22,9 +22,19 @@
                         <div class="form-group row">
                             <label class="col-md-4 col-form-label" for="admin_price_cache_time">{{ trans('buyback::global.admin_item_select_label') }}</label>
                             <div class="col-md-6">
-                                <select class="groupsearch form-control input-xs" name="admin-market-typeId" id="admin-market-typeId"></select>
+                                <select class="itemsearch form-control input-xs" name="admin-market-typeId" id="admin-market-typeId"></select>
                                 <p class="form-text text-muted mb-0">
                                     {{ trans('buyback::global.admin_item_select_description') }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label" for="admin_price_cache_time">{{ trans('buyback::global.admin_group_select_label') }}</label>
+                            <div class="col-md-6">
+                                <select class="groupsearch form-control input-xs" name="admin-market-groupId" id="admin-market-groupId"></select>
+                                <p class="form-text text-muted mb-0">
+                                    {{ trans('buyback::global.admin_group_select_description') }}
                                 </p>
                             </div>
                         </div>
@@ -153,13 +163,72 @@
             </div>
         </div>
     </div>
+
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ trans('buyback::global.admin_group_title_groups') }}</h3>
+                </div>
+                <div class="card-body">
+                    <table id="items" class="table .table-sm">
+                        <thead>
+                        <th>{{ trans('buyback::global.admin_group_table_item_name') }}</th>
+                        <th class="text-center"><i class="fas fa-arrow-down"></i>/<i class="fas fa-arrow-up">{{ trans('buyback::global.admin_group_table_jita') }}</th>
+                        <th class="text-center">{{ trans('buyback::global.admin_group_table_percentage') }}</th>
+                        <th class="text-center">{{ trans('buyback::global.admin_group_table_provider') }}</th>
+                        <th class="text-center">{{ trans('buyback::global.admin_group_table_actions') }}</th>
+                        </thead>
+                        <tbody>
+                        @if (count($marketConfigsGroups) > 0)
+                            @foreach($marketConfigsGroups as $key => $config)
+                                <tr>
+                                    <form action="{{ route('buyback.item.market.removegroup', ['groupId' => $config->groupId]) }}" method="get" id="admin-market-config-remove-group" name="admin-market-config-remove-group">
+                                        {{ csrf_field() }}
+                                    <td class="align-middle">{{ $config->groupName}}</td>
+                                    <td class="text-center align-middle">{!! $config->marketOperationType == 0 ? '<i class="fas fa-arrow-down"></i>' : '<i class="fas fa-arrow-up"></i>' !!}</td>
+                                    <td class="text-center align-middle">{{ ($config->price <= 0) ? $config->percentage . " %" : "-" }}</td>
+                                    <td class="text-center align-middle">{{ $config->provider }}</td>
+                                    <td class="text-center mb-4 mt-4 align-middle"><button class="btn btn-danger btn-xs form-control" id="submit" type="submit"><i class="fas fa-trash-alt"></i>{{ trans('buyback::global.admin_group_table_button') }}</button></td>
+                                    </form>
+                                </tr>
+                            @endforeach
+                        @endif
+                        </tbody>
+                    </table>
+                    <br/>
+                </div>
+            </div>
+        </div>
+    </div>    
 @stop
 @push('javascript')
     <script>
-        $('.groupsearch').select2({
+        $('.itemsearch').select2({
             placeholder: '{{ trans('buyback::global.admin_select_placeholder') }}',
             ajax: {
                 url: '/autocomplete',
+                dataType: 'json',
+                delay: 250,
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: item.name,
+                                id: item.id
+                            }
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
+
+        $('.groupsearch').select2({
+            placeholder: '{{ trans('buyback::global.admin_select_placeholder') }}',
+            ajax: {
+                url: '/autocompleteGroups',
                 dataType: 'json',
                 delay: 250,
                 processResults: function (data) {

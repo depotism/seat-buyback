@@ -24,10 +24,12 @@ namespace Depotism\Seat\SeatBuyback\Http\Controllers;
 
 
 use Depotism\Seat\SeatBuyback\Models\BuybackMarketConfig;
+use Depotism\Seat\SeatBuyback\Models\BuybackMarketConfigGroups;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Seat\Eveapi\Models\Sde\InvType;
+use Seat\Eveapi\Models\Sde\InvGroup;
 use Seat\Web\Http\Controllers\Controller;
 use Depotism\Seat\SeatBuyback\Services\ItemService;
 use Depotism\Seat\SeatBuyback\Services\SettingsService;
@@ -65,6 +67,7 @@ class BuybackItemController extends Controller {
     {
         return view('buyback::buyback_item', [
             'marketConfigs' => BuybackMarketConfig::orderBy('typeName', 'asc')->get(),
+            'marketConfigsGroups' => BuybackMarketConfigGroups::orderBy('groupName', 'asc')->get(),
         ]);
     }
 
@@ -75,13 +78,17 @@ class BuybackItemController extends Controller {
     {
         
         $request->validate([
-            'admin-market-typeId'       => 'required_if:items,null',
+            // 'admin-market-typeId'       => 'required_if:items,null',
             'admin-market-operation'    => 'required',
             'admin-market-percentage'   => 'required|numeric|between:0,99.99',
             'admin-market-price'        => 'required|numeric',
             'defaultPriceProvider'      => 'required|numeric',
-            'items'                     => 'required_if:admin-market-typeId,""'
+            // 'items'                     => 'required_if:admin-market-typeId,""'
         ]);
+
+        if (($request->get('items') == null) && ($request->get('admin-market-typeId') == null) && ($request->get('admin-market-groupId') == null)) {
+            return redirect()->route('buyback.item')->with('error', trans('Error, at least try to select one fucking field.')); 
+        }
         
         
         $multiLine = false;
@@ -89,23 +96,43 @@ class BuybackItemController extends Controller {
         if ($request->get('items') != null) {
             $parsedItems = $this->itemService->parseEveItemData($request->get('items'));
             $multiLine = true;
-            
         }
         // dd($request);
         
         if (!$multiLine) {
-            $res = $this->addItemToMarket(
-                (int)$request->get('admin-market-typeId'),
-                (int)$request->get('admin-market-operation'),
-                (int)$request->get('admin-market-percentage'),
-                (int)$request->get("admin-market-price"),
-                (int)$request->get("defaultPriceProvider")
-            );
 
-            if (!$res) {
-                return redirect()->route('buyback.item')
-                ->with(['error' => trans('buyback::global.admin_error_config') . $item->typeId]);
+            // single typeID
+            if ($request->get('admin-market-typeId') != null) {
+                $res = $this->addItemToMarket(
+                    (int)$request->get('admin-market-typeId'),
+                    (int)$request->get('admin-market-operation'),
+                    (int)$request->get('admin-market-percentage'),
+                    (int)$request->get("admin-market-price"),
+                    (int)$request->get("defaultPriceProvider")
+                );
+
+                if (!$res) {
+                    return redirect()->route('buyback.item')
+                    ->with(['error' => trans('buyback::global.admin_error_config') . $item->typeId]);
+                }
             }
+
+            // single groupID
+            if ($request->get('admin-market-groupId') != null) {
+                $res = $this->addGroupToMarket(
+                    (int)$request->get('admin-market-groupId'),
+                    (int)$request->get('admin-market-operation'),
+                    (int)$request->get('admin-market-percentage'),
+                    (int)$request->get("admin-market-price"),
+                    (int)$request->get("defaultPriceProvider")
+                );
+
+                if (!$res) {
+                    return redirect()->route('buyback.item')
+                    ->with(['error' => trans('buyback::global.admin_error_config') . $item->typeId]);
+                }
+            }
+
         } else {
             // dd($parsedItems);
             // deleting previous configs
@@ -163,6 +190,25 @@ class BuybackItemController extends Controller {
         return true;
     }
 
+    private function addGroupToMarket(int $groupId, int $marketOperation, int $marketPercentage, int $marketFixedPrice, int $priceProvider) {
+        $item = BuybackMarketConfigGroups::where('groupId', $groupId)->first();
+
+        if ($item != null) {
+            return false;
+        }
+
+        $invGroup = InvGroup::where('groupId', $groupId)->first();
+        BuybackMarketConfigGroups::insert([
+            'groupId' => $groupId,
+            'groupName' => (string)$invGroup->groupName,            
+            'marketOperationType' => $marketOperation,
+            'percentage' => $marketPercentage,
+            'provider' => $priceProvider
+        ]);
+
+        return true;
+    }    
+
 
     /**
      * @return mixed
@@ -180,4 +226,18 @@ class BuybackItemController extends Controller {
         return redirect()->back()
             ->with('success', trans('buyback::global.admin_success_market_remove'));
     }
+
+    public function removeMarketConfigGroup(Request $request, int $groupId)
+    {
+
+        if (!$request->isMethod('get') || empty($groupId) || !is_numeric($groupId)) {
+            return redirect()->back()
+                ->with(['error' => trans('buyback::global.error')]);
+        }
+
+        BuybackMarketConfigGroups::destroy($groupId);
+
+        return redirect()->back()
+            ->with('success', trans('buyback::global.admin_success_market_remove'));
+    }    
 }

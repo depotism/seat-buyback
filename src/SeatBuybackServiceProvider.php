@@ -203,6 +203,6 @@ class SeatBuybackServiceProvider extends AbstractSeatPlugin
      */
     public function getPackagistVendorName(): string
     {
-        return 'Depotism';
+        return 'depotism';
     }
 }

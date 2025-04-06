@@ -48,4 +48,20 @@ class SearchController extends Controller {
         }
         return response()->json($data);
     }
+
+    public function autocompleteGroups(Request $request) {
+        if($request->has('q')) {
+            $data = DB::table('invGroups as g')
+                ->select(
+                    'g.groupID AS id',
+                    'g.groupName AS name'
+                )
+                ->where('groupName', 'LIKE', "%" . $request->get('q') . "%")
+                ->where('published', '=', 1)
+                ->orderBy('groupName', 'asc')
+                ->get();
+        }
+        
+        return response()->json($data);
+    }    
 }

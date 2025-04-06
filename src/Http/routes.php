@@ -84,6 +84,11 @@ Route::group([
                     Route::get('/removeMarketConfig/{typeId}')
                         ->name('buyback.item.market.remove')
                         ->uses('BuybackItemController@removeMarketConfig');
+
+                    // Remove market group config
+                    Route::get('/removeMarketConfigGroup/{groupId}')
+                        ->name('buyback.item.market.removegroup')
+                        ->uses('BuybackItemController@removeMarketConfigGroup');                        
                 });
 
             Route::prefix('/admin')
@@ -108,6 +113,11 @@ Route::group([
 
     // Select2 autocomplete
     Route::get('/autocomplete')
-        ->name('autocompelte')
+        ->name('autocomplete.items')
         ->uses('SearchController@autocomplete');
+
+    // Select2 autocomplete
+    Route::get('/autocompleteGroups')
+        ->name('autocomplete.groups')
+        ->uses('SearchController@autocompleteGroups');        
 });

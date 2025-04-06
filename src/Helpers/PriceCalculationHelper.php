@@ -25,6 +25,8 @@ namespace Depotism\Seat\SeatBuyback\Helpers;
 use Depotism\Seat\SeatBuyback\Models\BuybackPriceData;
 use Illuminate\Support\Facades\DB;
 use Depotism\Seat\SeatBuyback\Models\BuybackMarketConfig;
+use Depotism\Seat\SeatBuyback\Models\BuybackMarketConfigGroups;
+use Seat\Eveapi\Models\Sde\InvType;
 // use Depotism\Seat\SeatBuyback\Parser\PriceableEveItem;
 
 /**
@@ -42,7 +44,11 @@ class PriceCalculationHelper {
         $marketConfig = BuybackMarketConfig::where('typeId', $typeId)->first();
 
         if($marketConfig == null) {
-            return null;
+            $invType = InvType::where('typeID', $typeId)->first();
+            $marketConfig = BuybackMarketConfigGroups::where('groupId', $invType->groupID)->first();
+            if ($marketConfig == null) {
+                return null;
+            }
         }
 
         if($marketConfig->price > 0) {

@@ -40,6 +40,7 @@ use RecursiveTree\Seat\TreeLib\Items\EveItem;
 use Depotism\Seat\SeatBuyback\Models\BuybackPriceData;
 use Depotism\Seat\SeatBuyback\Models\BuyBackPriceProvider;
 use Depotism\Seat\SeatBuyback\Models\BuybackMarketConfig;
+use Depotism\Seat\SeatBuyback\Models\BuybackMarketConfigGroups;
 
 /**
  * Class ItemService
@@ -81,8 +82,15 @@ class ItemService
             $marketConfig = BuybackMarketConfig::where('typeId', $item->getTypeID())->first();
             
             if ($marketConfig == null) {
-                continue;
+                $invType = InvType::where('typeID', $item->getTypeID())->first();
+                // dd($invType);
+                $marketConfig = BuybackMarketConfigGroups::where('groupId', $invType->groupID)->first();
+                // dd($marketConfig);
+                if ($marketConfig == null) {
+                    continue;
+                }
             }
+
             $provider = $marketConfig->provider;
             if (array_key_exists($provider, $sorted)) {
                 $sorted[$provider]->push($item);
@@ -90,7 +98,7 @@ class ItemService
                 $sorted[$provider] = collect([$item]);
             }
         }
-        //dd($sorted); //
+        // dd($sorted); //
         
         // loop through all price providers
         foreach ($sorted as $provider => $items) {
@@ -100,9 +108,7 @@ class ItemService
                 // dd($e);
                 return redirect()->back()->with('error',$e->getMessage());
             }
-            
-            // dd($parser_result);
-            
+                      
             foreach ($items as $item) {
                 //dd(get_class($item));
                 // dd($item);
@@ -122,7 +128,7 @@ class ItemService
             }
         }
 
-        //  dd($parsedRawData);
+        //dd($parsedRawData);
         return $this->categorizeItems($parsedRawData);
     }
 
@@ -133,7 +139,6 @@ class ItemService
     {
         $parsedItems = [];
         foreach ($itemData as $key => $item) {
-
             $result = DB::table('invTypes as it')
                 ->join('invGroups as ig', 'it.groupID', '=', 'ig.GroupID')
                 ->rightJoin('buyback_market_config as bmc', 'it.typeID', '=', 'bmc.typeId')
@@ -151,12 +156,18 @@ class ItemService
                 ->first();
 
             if (empty($result)) {
-                $parsedItems["ignored"][] = [
-                    'ItemId' => $key,
-                    'ItemName' => $item["name"],
-                    'ItemQuantity' => $item["quantity"]
-                ];
-                continue;
+                // now we check again if it's a group thingi.
+                $invType = InvType::where('typeID', $item["typeID"])->first();
+                $result = BuybackMarketConfigGroups::where('groupId', $invType->groupID)->first(); 
+
+                if ($result == null) {
+                    $parsedItems["ignored"][] = [
+                        'ItemId' => $key,
+                        'ItemName' => $item["name"],
+                        'ItemQuantity' => $item["quantity"]
+                    ];
+                    continue;
+                }
             }
 
             if (!array_key_exists($result->groupID, $parsedItems)) {

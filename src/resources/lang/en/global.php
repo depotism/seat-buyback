@@ -122,5 +122,8 @@ return [
     'my_contracts_closed_error' => 'No closed contracts found',
     'admin_group_table_provider' => 'Price Provider',
     'admin_item_multiline_title' => 'Add multiple items',
-    'admin_item_multiline_description' => 'Copy your EVE items with ( CTRL + A & CTRL + C ) in your inventory and paste them with ( CTRL + V ) into the input field. If a item is already configured it will get overwritten with the new config!'
+    'admin_item_multiline_description' => 'Copy your EVE items with ( CTRL + A & CTRL + C ) in your inventory and paste them with ( CTRL + V ) into the input field. If a item is already configured it will get overwritten with the new config!',
+    'admin_group_select_description' => 'Select the GROUP which you want to add to the config. The fixed price is ignored here.',
+    'admin_group_select_label' => 'Select a group',    
+    'admin_group_title_groups' => 'Group Overview'
 ];
