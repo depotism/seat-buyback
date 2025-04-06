@@ -1,5 +1,5 @@
 # seat-buyback
-[![Latest Stable Version](http://img.shields.io/packagist/v/depotism/seat-buyback.svg?style=flat-square)]()
+[![Latest Stable Version](https://img.shields.io/packagist/v/depotism/seat-buyback?style=flat-square)]()
 ![](https://img.shields.io/badge/SeAT-5.0.x-blueviolet?style=flat-square)
 ![](https://img.shields.io/github/license/Depotism/seat-buyback?style=flat-square)
 
