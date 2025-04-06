@@ -21,7 +21,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 namespace Depotism\Seat\SeatBuyback;
 
-// use Depotism\Seat\SeatBuyback\Factories\PriceProviderFactory;
 use Depotism\Seat\SeatBuyback\Services\DiscordService;
 use Depotism\Seat\SeatBuyback\Services\ItemService;
 use Depotism\Seat\SeatBuyback\Services\SettingsService;
@@ -77,10 +76,6 @@ class SeatBuybackServiceProvider extends AbstractSeatPlugin
             return new SettingsService();
         });
 
-        // // Price Provider Factory
-        // $this->app->singleton(PriceProviderFactory::class, function ($app) {
-        //     return new PriceProviderFactory($app->make(SettingsService::class));
-        // });
 
         // Item Service
         $this->app->singleton(ItemService::class, function ($app) {

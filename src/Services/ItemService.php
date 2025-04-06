@@ -24,7 +24,6 @@ namespace Depotism\Seat\SeatBuyback\Services;
 
 use Depotism\Seat\SeatBuyback\Exceptions\ItemParserBadFormatException;
 use Depotism\Seat\SeatBuyback\Exceptions\SettingsServiceException;
-// use Depotism\Seat\SeatBuyback\Factories\PriceProviderFactory;
 use Depotism\Seat\SeatBuyback\Helpers\PriceCalculationHelper;
 // use Depotism\Seat\SeatBuyback\Provider\IPriceProvider;
 use Depotism\Seat\SeatBuyback\Services\SettingsService;
@@ -53,13 +52,10 @@ class ItemService
     /**
      * @throws SettingsServiceException
      */
-    // public function __construct(PriceProviderFactory $priceProviderFactory)
     public function __construct(SettingsService $settingsService)
     {
         $this->settingsService = $settingsService;
-        // $this->priceProvider = $priceProviderFactory->getPriceProvider();
     }
-
 
     protected const BIG_NUMBER_REGEXP = "(\d*\.?\d*)";//"(?:\d+(?:[’\s+,]\d\d\d)*(?:[\.,]\d\d)?)";
 
@@ -86,12 +82,16 @@ class ItemService
                 // dd($invType);
                 $marketConfig = BuybackMarketConfigGroups::where('groupId', $invType->groupID)->first();
                 // dd($marketConfig);
-                if ($marketConfig == null) {
-                    continue;
-                }
+                // if ($marketConfig == null) {
+                //     continue;
+                // }
             }
 
-            $provider = $marketConfig->provider;
+            $provider = BuyBackPriceProvider::orderBy('name', 'asc')->first()->id;
+            if ($marketConfig != null) {
+                $provider = $marketConfig->provider;
+            }
+
             if (array_key_exists($provider, $sorted)) {
                 $sorted[$provider]->push($item);
             } else {

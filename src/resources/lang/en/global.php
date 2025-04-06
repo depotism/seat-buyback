@@ -125,5 +125,8 @@ return [
     'admin_item_multiline_description' => 'Copy your EVE items with ( CTRL + A & CTRL + C ) in your inventory and paste them with ( CTRL + V ) into the input field. If a item is already configured it will get overwritten with the new config!',
     'admin_group_select_description' => 'Select the GROUP which you want to add to the config. The fixed price is ignored here.',
     'admin_group_select_label' => 'Select a group',    
-    'admin_group_title_groups' => 'Group Overview'
+    'admin_group_title_groups' => 'Group Overview',
+    'admin_group_table_group_name' => 'GroupName',
+    'admin_item_repro_description' => 'Either to use the repro value or not. Very helpful for (compressed) Ores',
+    'admin_item_repro_label' => 'Reprocessed Value?',
 ];

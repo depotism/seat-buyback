@@ -83,6 +83,7 @@ class BuybackItemController extends Controller {
             'admin-market-percentage'   => 'required|numeric|between:0,99.99',
             'admin-market-price'        => 'required|numeric',
             'defaultPriceProvider'      => 'required|numeric',
+            'admin-market-repro'        => 'required'
             // 'items'                     => 'required_if:admin-market-typeId,""'
         ]);
 
@@ -108,7 +109,8 @@ class BuybackItemController extends Controller {
                     (int)$request->get('admin-market-operation'),
                     (int)$request->get('admin-market-percentage'),
                     (int)$request->get("admin-market-price"),
-                    (int)$request->get("defaultPriceProvider")
+                    (int)$request->get("defaultPriceProvider"),
+                    (bool)$request->get("admin-market-repro")
                 );
 
                 if (!$res) {
@@ -124,7 +126,8 @@ class BuybackItemController extends Controller {
                     (int)$request->get('admin-market-operation'),
                     (int)$request->get('admin-market-percentage'),
                     (int)$request->get("admin-market-price"),
-                    (int)$request->get("defaultPriceProvider")
+                    (int)$request->get("defaultPriceProvider"),
+                    (bool)$request->get("admin-market-repro")
                 );
 
                 if (!$res) {
@@ -145,7 +148,8 @@ class BuybackItemController extends Controller {
                     (int)$request->get('admin-market-operation'),
                     (int)$request->get('admin-market-percentage'),
                     (int)$request->get("admin-market-price"),
-                    (int)$request->get("defaultPriceProvider")
+                    (int)$request->get("defaultPriceProvider"),
+                    (bool)$request->get("admin-market-repro")
                 );                
             }
 
@@ -155,7 +159,8 @@ class BuybackItemController extends Controller {
                     (int)$request->get('admin-market-operation'),
                     (int)$request->get('admin-market-percentage'),
                     (int)$request->get("admin-market-price"),
-                    (int)$request->get("defaultPriceProvider")
+                    (int)$request->get("defaultPriceProvider"),
+                    (bool)$request->get("admin-market-repro")
                 );    
             }
 
@@ -167,7 +172,7 @@ class BuybackItemController extends Controller {
     }
 
 
-    private function addItemToMarket(int $typeId, int $marketOperation, int $marketPercentage, int $marketFixedPrice, int $priceProvider) {
+    private function addItemToMarket(int $typeId, int $marketOperation, int $marketPercentage, int $marketFixedPrice, int $priceProvider, bool $repro) {
         $item = BuybackMarketConfig::where('typeId', $typeId)->first();
 
         if ($item != null) {
@@ -184,13 +189,14 @@ class BuybackItemController extends Controller {
             'groupName' => (string)$invType->group->groupName,
             'percentage' => $marketPercentage,
             'price' => $marketFixedPrice,
-            'provider' => $priceProvider
+            'provider' => $priceProvider,
+            'repro' => $repro
         ]);
 
         return true;
     }
 
-    private function addGroupToMarket(int $groupId, int $marketOperation, int $marketPercentage, int $marketFixedPrice, int $priceProvider) {
+    private function addGroupToMarket(int $groupId, int $marketOperation, int $marketPercentage, int $marketFixedPrice, int $priceProvider, bool $repro) {
         $item = BuybackMarketConfigGroups::where('groupId', $groupId)->first();
 
         if ($item != null) {
@@ -203,7 +209,8 @@ class BuybackItemController extends Controller {
             'groupName' => (string)$invGroup->groupName,            
             'marketOperationType' => $marketOperation,
             'percentage' => $marketPercentage,
-            'provider' => $priceProvider
+            'provider' => $priceProvider,
+            'repro' => $repro
         ]);
 
         return true;
