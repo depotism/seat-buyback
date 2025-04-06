@@ -143,7 +143,7 @@ class ItemService
                 return redirect()->back()->with('error',$e->getMessage());
             }
         }        
-        dd($repro);
+        //dd($repro);
 
         // loop through all price providers
         foreach ($sorted as $provider => $items) {
