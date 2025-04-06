@@ -19,18 +19,18 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-namespace H4zz4rdDev\Seat\SeatBuyback;
+namespace Depotism\Seat\SeatBuyback;
 
-// use H4zz4rdDev\Seat\SeatBuyback\Factories\PriceProviderFactory;
-use H4zz4rdDev\Seat\SeatBuyback\Services\DiscordService;
-use H4zz4rdDev\Seat\SeatBuyback\Services\ItemService;
-use H4zz4rdDev\Seat\SeatBuyback\Services\SettingsService;
+// use Depotism\Seat\SeatBuyback\Factories\PriceProviderFactory;
+use Depotism\Seat\SeatBuyback\Services\DiscordService;
+use Depotism\Seat\SeatBuyback\Services\ItemService;
+use Depotism\Seat\SeatBuyback\Services\SettingsService;
 use Seat\Services\AbstractSeatPlugin;
 
 /**
  * Class SeatBuybackServiceProvider.
  *
- * @package H4zz4rdDev\Seat\SeatBuyback
+ * @package Depotism\Seat\SeatBuyback
  */
 class SeatBuybackServiceProvider extends AbstractSeatPlugin
 {
@@ -179,7 +179,7 @@ class SeatBuybackServiceProvider extends AbstractSeatPlugin
      */
     public function getPackageRepositoryUrl(): string
     {
-        return 'https://github.com/H4zz4rdDev/seat-buyback';
+        return 'https://github.com/Depotism/seat-buyback';
     }
 
     /**
@@ -203,6 +203,6 @@ class SeatBuybackServiceProvider extends AbstractSeatPlugin
      */
     public function getPackagistVendorName(): string
     {
-        return 'H4zz4rdDev';
+        return 'Depotism';
     }
 }

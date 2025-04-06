@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-namespace H4zz4rdDev\Seat\SeatBuyback\Http\Controllers;
+namespace Depotism\Seat\SeatBuyback\Http\Controllers;
 
 use Seat\Web\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +29,7 @@ use Illuminate\Http\Request;
 /**
  * Class SearchController.
  *
- * @package H4zz4rdDev\Seat\SeatBuyback\Http\Controllers
+ * @package Depotism\Seat\SeatBuyback\Http\Controllers
  */
 class SearchController extends Controller {
 

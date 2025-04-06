@@ -20,11 +20,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-namespace H4zz4rdDev\Seat\SeatBuyback\Services;
+namespace Depotism\Seat\SeatBuyback\Services;
 
-use H4zz4rdDev\Seat\SeatBuyback\Exceptions\DiscordServiceCurlException;
-use H4zz4rdDev\Seat\SeatBuyback\Exceptions\DiscordServiceWebhookUrlNotFoundException;
-use H4zz4rdDev\Seat\SeatBuyback\Exceptions\SettingsServiceException;
+use Depotism\Seat\SeatBuyback\Exceptions\DiscordServiceCurlException;
+use Depotism\Seat\SeatBuyback\Exceptions\DiscordServiceWebhookUrlNotFoundException;
+use Depotism\Seat\SeatBuyback\Exceptions\SettingsServiceException;
 
 /**
  * Class DiscordService

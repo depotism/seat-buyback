@@ -20,24 +20,24 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-namespace H4zz4rdDev\Seat\SeatBuyback\Http\Controllers;
+namespace Depotism\Seat\SeatBuyback\Http\Controllers;
 
-use H4zz4rdDev\Seat\SeatBuyback\Exceptions\ItemParserBadFormatException;
-use H4zz4rdDev\Seat\SeatBuyback\Exceptions\NoMarketDataFoundException;
-use H4zz4rdDev\Seat\SeatBuyback\Exceptions\SettingsServiceException as SettingsServiceExceptionAlias;
-use H4zz4rdDev\Seat\SeatBuyback\Services\ItemService;
-use H4zz4rdDev\Seat\SeatBuyback\Services\SettingsService;
+use Depotism\Seat\SeatBuyback\Exceptions\ItemParserBadFormatException;
+use Depotism\Seat\SeatBuyback\Exceptions\NoMarketDataFoundException;
+use Depotism\Seat\SeatBuyback\Exceptions\SettingsServiceException as SettingsServiceExceptionAlias;
+use Depotism\Seat\SeatBuyback\Services\ItemService;
+use Depotism\Seat\SeatBuyback\Services\SettingsService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Config;
 use Illuminate\View\View;
 use Seat\Web\Http\Controllers\Controller;
-use H4zz4rdDev\Seat\SeatBuyback\Helpers;
+use Depotism\Seat\SeatBuyback\Helpers;
 
 /**
  * Class BuybackController.
  *
- * @package H4zz4rdDev\Seat\SeatBuyback\Http\Controllers
+ * @package Depotism\Seat\SeatBuyback\Http\Controllers
  */
 class BuybackController extends Controller
 {

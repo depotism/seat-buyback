@@ -1,6 +1,6 @@
 <?php
 
-namespace H4zz4rdDev\Seat\SeatBuyback\Parser;
+namespace Depotism\Seat\SeatBuyback\Parser;
 
 use Seat\Eveapi\Models\Sde\InvType;
 use RecursiveTree\Seat\TreeLib\Parser\Parser;

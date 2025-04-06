@@ -20,26 +20,26 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-namespace H4zz4rdDev\Seat\SeatBuyback\Services;
+namespace Depotism\Seat\SeatBuyback\Services;
 
-use H4zz4rdDev\Seat\SeatBuyback\Exceptions\ItemParserBadFormatException;
-use H4zz4rdDev\Seat\SeatBuyback\Exceptions\SettingsServiceException;
-// use H4zz4rdDev\Seat\SeatBuyback\Factories\PriceProviderFactory;
-use H4zz4rdDev\Seat\SeatBuyback\Helpers\PriceCalculationHelper;
-// use H4zz4rdDev\Seat\SeatBuyback\Provider\IPriceProvider;
-use H4zz4rdDev\Seat\SeatBuyback\Services\SettingsService;
+use Depotism\Seat\SeatBuyback\Exceptions\ItemParserBadFormatException;
+use Depotism\Seat\SeatBuyback\Exceptions\SettingsServiceException;
+// use Depotism\Seat\SeatBuyback\Factories\PriceProviderFactory;
+use Depotism\Seat\SeatBuyback\Helpers\PriceCalculationHelper;
+// use Depotism\Seat\SeatBuyback\Provider\IPriceProvider;
+use Depotism\Seat\SeatBuyback\Services\SettingsService;
 use Illuminate\Support\Facades\DB;
 use Seat\Eveapi\Models\Sde\InvType;
 use RecursiveTree\Seat\PricesCore\Facades\PriceProviderSystem;
 use RecursiveTree\Seat\PricesCore\Models\PriceProviderInstance;
 use RecursiveTree\Seat\TreeLib\Parser\ItemListParser;
 use RecursiveTree\Seat\TreeLib\Parser\Parser;
-use H4zz4rdDev\Seat\SeatBuyback\Parser\AssetWindowParser;
-use H4zz4rdDev\Seat\SeatBuyback\Parser\PriceableEveItem;
+use Depotism\Seat\SeatBuyback\Parser\AssetWindowParser;
+use Depotism\Seat\SeatBuyback\Parser\PriceableEveItem;
 use RecursiveTree\Seat\TreeLib\Items\EveItem;
-use H4zz4rdDev\Seat\SeatBuyback\Models\BuybackPriceData;
-use H4zz4rdDev\Seat\SeatBuyback\Models\BuyBackPriceProvider;
-use H4zz4rdDev\Seat\SeatBuyback\Models\BuybackMarketConfig;
+use Depotism\Seat\SeatBuyback\Models\BuybackPriceData;
+use Depotism\Seat\SeatBuyback\Models\BuyBackPriceProvider;
+use Depotism\Seat\SeatBuyback\Models\BuybackMarketConfig;
 
 /**
  * Class ItemService

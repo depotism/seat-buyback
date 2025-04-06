@@ -20,7 +20,7 @@
     <div id="accordion-open">
         @foreach($openContracts as $contract)
             @php
-                $contractFinalPrice = number_format(H4zz4rdDev\Seat\SeatBuyback\Helpers\PriceCalculationHelper::calculateFinalPrice(
+                $contractFinalPrice = number_format(Depotism\Seat\SeatBuyback\Helpers\PriceCalculationHelper::calculateFinalPrice(
                     json_decode($contract->contractData, true)["parsed"]),0,',', '.')
             @endphp
             <div class="card">
@@ -111,7 +111,7 @@
                             <tr>
                                 <td class="align-centered"><b>Summary</b></td>
                                 <td class="align-centered isk-td"><b><span class="isk-info">+
-                                            {{ number_format(H4zz4rdDev\Seat\SeatBuyback\Helpers\PriceCalculationHelper::calculateFinalPrice(
+                                            {{ number_format(Depotism\Seat\SeatBuyback\Helpers\PriceCalculationHelper::calculateFinalPrice(
                                                 json_decode($contract->contractData, true)["parsed"]),0,',', '.') }}</span> {{ trans('buyback::global.currency') }}</b></td>
                             </tr>
                             </tbody>

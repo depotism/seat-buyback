@@ -10,7 +10,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "H4zz4rdDev\\Seat\\SeatBuyback\\": "src/"
+            "Depotism\\Seat\\SeatBuyback\\": "src/"
         }
     },
     "minimum-stability": "dev",
@@ -32,7 +32,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "H4zz4rdDev\\Seat\\SeatBuyback\\SeatBuybackServiceProvider"
+                "Depotism\\Seat\\SeatBuyback\\SeatBuybackServiceProvider"
             ]
         }
     }

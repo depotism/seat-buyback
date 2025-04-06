@@ -20,20 +20,20 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-namespace H4zz4rdDev\Seat\SeatBuyback\Http\Controllers;
+namespace Depotism\Seat\SeatBuyback\Http\Controllers;
 
-use H4zz4rdDev\Seat\SeatBuyback\Models\BuyBackPriceProvider;
-use H4zz4rdDev\Seat\SeatBuyback\Services\SettingsService;
+use Depotism\Seat\SeatBuyback\Models\BuyBackPriceProvider;
+use Depotism\Seat\SeatBuyback\Services\SettingsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Seat\Eveapi\Models\Sde\InvType;
 use Seat\Web\Http\Controllers\Controller;
-use H4zz4rdDev\Seat\SeatBuyback\Models\BuybackMarketConfig;
+use Depotism\Seat\SeatBuyback\Models\BuybackMarketConfig;
 
 /**
  * Class BuybackAdminController.
  *
- * @package H4zz4rdDev\Seat\SeatBuyback\Http\Controllers
+ * @package Depotism\Seat\SeatBuyback\Http\Controllers
  */
 class BuybackAdminController extends Controller
 {

@@ -1,7 +1,7 @@
 # seat-buyback
 [![Latest Stable Version](http://img.shields.io/packagist/v/h4zz4rddev/seat-buyback.svg?style=flat-square)]()
 ![](https://img.shields.io/badge/SeAT-4.0.x-blueviolet?style=flat-square)
-![](https://img.shields.io/github/license/H4zz4rdDev/seat-buyback?style=flat-square)
+![](https://img.shields.io/github/license/Depotism/seat-buyback?style=flat-square)
 
 A module for [SeAT](https://github.com/eveseat/seat) that makes your life with corporation buyback programs a lot easier.
 

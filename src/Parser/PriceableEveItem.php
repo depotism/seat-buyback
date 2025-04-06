@@ -1,6 +1,6 @@
 <?php
 
-namespace H4zz4rdDev\Seat\SeatBuyback\Parser;
+namespace Depotism\Seat\SeatBuyback\Parser;
 
 use RecursiveTree\Seat\TreeLib\Items\EveItem;
 use Seat\Services\Contracts\IPriceable;

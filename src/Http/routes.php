@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 */
 
 Route::group([
-    'namespace' => 'H4zz4rdDev\Seat\SeatBuyback\Http\Controllers',
+    'namespace' => 'Depotism\Seat\SeatBuyback\Http\Controllers',
     'middleware' => ['web', 'auth', 'locale'],
 ], function (): void {
 

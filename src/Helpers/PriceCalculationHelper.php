@@ -20,17 +20,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-namespace H4zz4rdDev\Seat\SeatBuyback\Helpers;
+namespace Depotism\Seat\SeatBuyback\Helpers;
 
-use H4zz4rdDev\Seat\SeatBuyback\Models\BuybackPriceData;
+use Depotism\Seat\SeatBuyback\Models\BuybackPriceData;
 use Illuminate\Support\Facades\DB;
-use H4zz4rdDev\Seat\SeatBuyback\Models\BuybackMarketConfig;
-// use H4zz4rdDev\Seat\SeatBuyback\Parser\PriceableEveItem;
+use Depotism\Seat\SeatBuyback\Models\BuybackMarketConfig;
+// use Depotism\Seat\SeatBuyback\Parser\PriceableEveItem;
 
 /**
  * Class PriceCalculationHelper
  *
- * @package H4zz4rdDev\Seat\SeatBuyback\Helpers
+ * @package Depotism\Seat\SeatBuyback\Helpers
  */
 class PriceCalculationHelper {
 

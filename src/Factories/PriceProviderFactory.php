@@ -20,13 +20,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-namespace H4zz4rdDev\Seat\SeatBuyback\Factories;
+namespace Depotism\Seat\SeatBuyback\Factories;
 
-use H4zz4rdDev\Seat\SeatBuyback\Exceptions\SettingsServiceException;
-// use H4zz4rdDev\Seat\SeatBuyback\Provider\EveMarketerPriceProvider;
-// use H4zz4rdDev\Seat\SeatBuyback\Provider\EvePraisalPriceProvider;
-use H4zz4rdDev\Seat\SeatBuyback\Provider\IPriceProvider;
-use H4zz4rdDev\Seat\SeatBuyback\Services\SettingsService;
+use Depotism\Seat\SeatBuyback\Exceptions\SettingsServiceException;
+// use Depotism\Seat\SeatBuyback\Provider\EveMarketerPriceProvider;
+// use Depotism\Seat\SeatBuyback\Provider\EvePraisalPriceProvider;
+use Depotism\Seat\SeatBuyback\Provider\IPriceProvider;
+use Depotism\Seat\SeatBuyback\Services\SettingsService;
 use RecursiveTree\Seat\PricesCore\Facades\PriceProviderSystem;
 use RecursiveTree\Seat\PricesCore\Models\PriceProviderInstance;
 

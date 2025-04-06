@@ -20,22 +20,22 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-namespace H4zz4rdDev\Seat\SeatBuyback\Http\Controllers;
+namespace Depotism\Seat\SeatBuyback\Http\Controllers;
 
 use Cassandra\Set;
-use H4zz4rdDev\Seat\SeatBuyback\Exceptions\DiscordServiceCurlException;
-use H4zz4rdDev\Seat\SeatBuyback\Services\DiscordService;
-use H4zz4rdDev\Seat\SeatBuyback\Services\SettingsService;
+use Depotism\Seat\SeatBuyback\Exceptions\DiscordServiceCurlException;
+use Depotism\Seat\SeatBuyback\Services\DiscordService;
+use Depotism\Seat\SeatBuyback\Services\SettingsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Seat\Web\Http\Controllers\Controller;
-use H4zz4rdDev\Seat\SeatBuyback\Models\BuybackContract;
+use Depotism\Seat\SeatBuyback\Models\BuybackContract;
 
 /**
  * Class BuybackContractController
  *
- * @package H4zz4rdDev\Seat\SeatBuyback\Http\Controllers
+ * @package Depotism\Seat\SeatBuyback\Http\Controllers
  */
 class BuybackContractController extends Controller {
 
