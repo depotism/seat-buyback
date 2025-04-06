@@ -1,11 +1,11 @@
 {
-    "name": "h4zz4rddev/seat-buyback",
+    "name": "depotism/seat-buyback",
     "description": "Buyback plugin for SeAT",
     "license": "GPL-3.0",
     "authors": [
         {
-            "name": "H4zz4rd",
-            "email": "h4zz4rd@c64gamer.com"
+            "name": "depotism",
+            "email": "reli@relicted.com"
         }
     ],
     "autoload": {
