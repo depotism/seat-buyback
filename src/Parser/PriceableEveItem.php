@@ -7,6 +7,10 @@ use Seat\Services\Contracts\IPriceable;
 
 class PriceableEveItem extends EveItem implements IPriceable
 {
+    public bool $repro = false;
+    public int $provider = -1;
+    public PriceableEveItem $parent;
+
     public function getTypeID(): int
     {
         return $this->typeModel->typeID;

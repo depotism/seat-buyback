@@ -74,32 +74,77 @@ class ItemService
 
         // i know it is not nice. but we need to split the results because we have different price providers now. 
         $sorted = [];
+        $repro = [];
+        // dd($parser_result->items);
         foreach ($parser_result->items as $item) {
             $marketConfig = BuybackMarketConfig::where('typeId', $item->getTypeID())->first();
             
             if ($marketConfig == null) {
                 $invType = InvType::where('typeID', $item->getTypeID())->first();
-                // dd($invType);
                 $marketConfig = BuybackMarketConfigGroups::where('groupId', $invType->groupID)->first();
-                // dd($marketConfig);
-                // if ($marketConfig == null) {
-                //     continue;
-                // }
             }
 
             $provider = BuyBackPriceProvider::orderBy('name', 'asc')->first()->id;
             if ($marketConfig != null) {
                 $provider = $marketConfig->provider;
+                $item->repro = $marketConfig->repro;
             }
-
+            $item->provider = $provider;
+            
             if (array_key_exists($provider, $sorted)) {
                 $sorted[$provider]->push($item);
             } else {
                 $sorted[$provider] = collect([$item]);
             }
+
+
+            // if we dont need to repro we will just skip
+            if (! $item->repro) continue;
+
+            // check for the materials
+            $result = DB::table('invTypes as it')
+                ->join('invTypeMaterials as iam', 'iam.typeID', '=', 'it.typeID')
+                ->join('invTypes as it2', 'it2.typeID', '=', 'iam.materialTypeID')
+                ->join('invGroups as ig', 'ig.groupID', '=', 'it.groupID')
+                ->select(
+                    'it.typeID',
+                    'it.typeName',
+                    'it.groupID',
+                    'ig.groupName',
+                    'iam.materialTypeID',
+                    'iam.quantity',
+                    'it2.typeName',
+                )
+                ->where('it.typeID', '=', $item->getTypeID())
+                ->get();            
+            
+            foreach ($result as $db_item) {
+                // create instance of invType
+                // give invType to the priceable item
+                $repro_item = new PriceableEveItem($db_item);
+                $repro_item->parent = $item;
+                $repro_item->amount = $item->amount * $db_item->quantity;
+
+                if (array_key_exists($provider, $repro)) {
+                    $repro[$provider]->push($repro_item);
+                } else {
+                    $repro[$provider] = collect([$repro_item]);
+                }            
+            }
         }
-        // dd($sorted); //
-        
+        // dd($repro); //
+
+        // loop through all repro stuff
+        foreach ($repro as $provider => $items) {
+            try {
+                PriceProviderSystem::getPrices((int)$provider, $items);
+            } catch (PriceProviderException $e){
+                // dd($e);
+                return redirect()->back()->with('error',$e->getMessage());
+            }
+        }        
+        dd($repro);
+
         // loop through all price providers
         foreach ($sorted as $provider => $items) {
             try {
@@ -108,14 +153,8 @@ class ItemService
                 // dd($e);
                 return redirect()->back()->with('error',$e->getMessage());
             }
-                      
+             
             foreach ($items as $item) {
-                //dd(get_class($item));
-                // dd($item);
-                // $priceData = $this->priceProvider->getItemPrice($item["typeID"]);
-                // if($priceData == null) {
-                //     return null;
-                // }
                 $key = $item->getTypeID();
     
                 $parsedRawData[$key]["price"] = $item->price;//$priceData->getItemPrice();
@@ -123,8 +162,8 @@ class ItemService
                 $parsedRawData[$key]["quantity"] = $item->amount;
                 $parsedRawData[$key]["typeID"] = $item->getTypeID();
                 $parsedRawData[$key]["priceProvider"] = $provider;
-                $parsedRawData[$key]["sum"] = PriceCalculationHelper::calculateItemPrice($item->getTypeID(),
-                    $item->amount, new BuybackPriceData($item->getTypeID(), $item->price));
+                $parsedRawData[$key]["repro"] = $item->repro;
+                $parsedRawData[$key]["sum"] = PriceCalculationHelper::calculateItemPrice($item->getTypeID(), $item->amount, new BuybackPriceData($item->getTypeID(), $item->price));
             }
         }
 
