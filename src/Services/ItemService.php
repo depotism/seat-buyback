@@ -107,7 +107,7 @@ class ItemService
                 ->join('invTypes as it2', 'it2.typeID', '=', 'iam.materialTypeID')
                 ->join('invGroups as ig', 'ig.groupID', '=', 'it.groupID')
                 ->select(
-                    'it.typeID',
+                    'it2.typeID',
                     'it.typeName',
                     'it.groupID',
                     'ig.groupName',
@@ -123,7 +123,8 @@ class ItemService
                 // give invType to the priceable item
                 $repro_item = new PriceableEveItem($db_item);
                 $repro_item->parent = $item;
-                $repro_item->amount = $item->amount * $db_item->quantity / $item->typeModel->portionSize;
+                $repro_item->amount = (int)(($item->amount / $item->typeModel->portionSize)* $db_item->quantity); //  
+                $repro_item->provider = $provider;
 
                 if (array_key_exists($provider, $repro)) {
                     $repro[$provider]->push($repro_item);
@@ -132,18 +133,20 @@ class ItemService
                 }            
             }
         }
-        // dd($repro); //
+        //dd($repro); //
 
         // loop through all repro stuff
         foreach ($repro as $provider => $items) {
             try {
+                
                 PriceProviderSystem::getPrices((int)$provider, $items);
             } catch (PriceProviderException $e){
                 // dd($e);
                 return redirect()->back()->with('error',$e->getMessage());
             }
         }        
-        //dd($repro);
+        //dd($repro); 
+        // dd('too far');
 
         // loop through all price providers
         foreach ($sorted as $provider => $items) {
@@ -153,9 +156,22 @@ class ItemService
                 // dd($e);
                 return redirect()->back()->with('error',$e->getMessage());
             }
-             
+            
             foreach ($items as $item) {
                 $key = $item->getTypeID();
+
+                // if we have to calculate the repro stuff we need to go through here and set the item->price.
+                if ($item->repro) {
+                    $item->price = 0;
+
+                    foreach ($repro[$item->provider] as $repro_itm) {    
+                        if ($repro_item->parent != $item) continue; // skip if it does not belong to us.
+
+                        $item->price += $repro_itm->price;
+                    }
+                    // dd($item->price);
+                }
+
     
                 $parsedRawData[$key]["price"] = $item->price;//$priceData->getItemPrice();
                 $parsedRawData[$key]["name"] = $item->getTypeName();
@@ -189,7 +205,8 @@ class ItemService
                     'ig.GroupID as groupID',
                     'bmc.percentage',
                     'bmc.marketOperationType',
-                    'bmc.provider'
+                    'bmc.provider',
+                    'bmc.repro'
                 )
                 ->where('it.typeID', '=', $key)
                 ->first();
@@ -217,6 +234,7 @@ class ItemService
                 $parsedItems["parsed"][$key]["typeSum"] = $item["sum"];
                 $parsedItems["parsed"][$key]["provider"] = $result->provider;
                 $parsedItems["parsed"][$key]["groupId"] = $result->groupID;
+                $parsedItems["parsed"][$key]["repro"] = (bool)$result->repro;
                 $parsedItems["parsed"][$key]["marketGroupName"] = $result->groupName;
 
                 $parsedItems["parsed"][$key]["marketConfig"] = [

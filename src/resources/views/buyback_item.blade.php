@@ -168,7 +168,7 @@
                                     <td class="text-center align-middle">{!! $config->marketOperationType == 0 ? '<i class="fas fa-arrow-down"></i>' : '<i class="fas fa-arrow-up"></i>' !!}</td>
                                     <td class="text-center align-middle">{{ ($config->price <= 0) ? $config->percentage . " %" : "-" }}</td>
                                     <td class="text-center align-middle">{{ ($config->price > 0) ? number_format($config->price,0,',', '.') . " ISK" : "-"}}</td>
-                                    <td class="text-center align-middle">{{ $config->provider }}</td>
+                                    <td class="text-center align-middle">{{ RecursiveTree\Seat\PricesCore\Models\PriceProviderInstance::find($config->provider)->name }}</td>
                                     <td class="text-center align-middle">{{ ( $config->repro == 0 ) ? "-" : "Yes" }}</td>
                                     <td class="align-middle">{{ $config->groupName }}</td>
                                     <td class="text-center mb-4 mt-4 align-middle"><button class="btn btn-danger btn-xs form-control" id="submit" type="submit"><i class="fas fa-trash-alt"></i>{{ trans('buyback::global.admin_group_table_button') }}</button></td>
@@ -210,7 +210,7 @@
                                     <td class="align-middle">{{ $config->groupName}}</td>
                                     <td class="text-center align-middle">{!! $config->marketOperationType == 0 ? '<i class="fas fa-arrow-down"></i>' : '<i class="fas fa-arrow-up"></i>' !!}</td>
                                     <td class="text-center align-middle">{{ ($config->price <= 0) ? $config->percentage . " %" : "-" }}</td>
-                                    <td class="text-center align-middle">{{ $config->provider }}</td>
+                                    <td class="text-center align-middle">{{ RecursiveTree\Seat\PricesCore\Models\PriceProviderInstance::find($config->provider)->name }}</td>
                                     <td class="text-center align-middle">{{ ( $config->repro == 0 ) ? "-" : "Yes" }}</td>
                                     <td class="text-center mb-4 mt-4 align-middle"><button class="btn btn-danger btn-xs form-control" id="submit" type="submit"><i class="fas fa-trash-alt"></i>{{ trans('buyback::global.admin_group_table_button') }}</button></td>
                                     </form>

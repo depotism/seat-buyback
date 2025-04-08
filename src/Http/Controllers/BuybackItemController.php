@@ -33,6 +33,7 @@ use Seat\Eveapi\Models\Sde\InvGroup;
 use Seat\Web\Http\Controllers\Controller;
 use Depotism\Seat\SeatBuyback\Services\ItemService;
 use Depotism\Seat\SeatBuyback\Services\SettingsService;
+use RecursiveTree\Seat\PricesCore\Models\PriceProviderInstance;
 
 /**
  * Class BuybackController.
