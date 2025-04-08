@@ -22,13 +22,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 namespace Depotism\Seat\SeatBuyback\Http\Controllers;
 
-use Depotism\Seat\SeatBuyback\Models\BuyBackPriceProvider;
 use Depotism\Seat\SeatBuyback\Services\SettingsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Seat\Eveapi\Models\Sde\InvType;
 use Seat\Web\Http\Controllers\Controller;
 use Depotism\Seat\SeatBuyback\Models\BuybackMarketConfig;
+use RecursiveTree\Seat\PricesCore\Models\PriceProviderInstance;
 
 /**
  * Class BuybackAdminController.
@@ -55,7 +55,7 @@ class BuybackAdminController extends Controller
         return view('buyback::buyback_admin', [
             'settings' => $this->settingsService->getAll(),
             'marketConfigs' => BuybackMarketConfig::orderBy('typeName', 'asc')->get(),
-            'priceProvider' => BuyBackPriceProvider::orderBy('name', 'asc')->get()
+            'priceProvider' => PriceProviderInstance::orderBy('name', 'asc')->get()
         ]);
     }
 

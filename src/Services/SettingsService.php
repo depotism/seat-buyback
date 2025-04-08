@@ -114,7 +114,7 @@ class SettingsService {
     private function loadAll(): void
     {
         try {
-            $settingData = DB::table('buyback_admin_config')
+            $settingData = DB::table('depo_buyback_admin_config')
                 ->get();
 
             foreach ($settingData as $item) {

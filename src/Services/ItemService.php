@@ -37,9 +37,9 @@ use Depotism\Seat\SeatBuyback\Parser\AssetWindowParser;
 use Depotism\Seat\SeatBuyback\Parser\PriceableEveItem;
 use RecursiveTree\Seat\TreeLib\Items\EveItem;
 use Depotism\Seat\SeatBuyback\Models\BuybackPriceData;
-use Depotism\Seat\SeatBuyback\Models\BuyBackPriceProvider;
 use Depotism\Seat\SeatBuyback\Models\BuybackMarketConfig;
 use Depotism\Seat\SeatBuyback\Models\BuybackMarketConfigGroups;
+
 
 /**
  * Class ItemService
@@ -84,7 +84,7 @@ class ItemService
                 $marketConfig = BuybackMarketConfigGroups::where('groupId', $invType->groupID)->first();
             }
 
-            $provider = BuyBackPriceProvider::orderBy('name', 'asc')->first()->id;
+            $provider = PriceProviderInstance::orderBy('name', 'asc')->first()->id;
             if ($marketConfig != null) {
                 $provider = $marketConfig->provider;
                 $item->repro = $marketConfig->repro;
@@ -196,7 +196,7 @@ class ItemService
         foreach ($itemData as $key => $item) {
             $result = DB::table('invTypes as it')
                 ->join('invGroups as ig', 'it.groupID', '=', 'ig.GroupID')
-                ->rightJoin('buyback_market_config as bmc', 'it.typeID', '=', 'bmc.typeId')
+                ->rightJoin('depo_buyback_market_config as bmc', 'it.typeID', '=', 'bmc.typeId')
                 ->select(
                     'it.typeID as typeID',
                     'it.typeName as typeName',
