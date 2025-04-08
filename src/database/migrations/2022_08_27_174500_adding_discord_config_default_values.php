@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddingDiscordConfigDefaultValues extends Migration {
+class DepoAddingDiscordConfigDefaultValues extends Migration {
 
     /**
      * Run the migrations.
@@ -33,22 +33,22 @@ class AddingDiscordConfigDefaultValues extends Migration {
      */
     public function up(): void
     {
-        DB::table('buyback_admin_config')->insert([
+        DB::table('depo_buyback_admin_config')->insert([
             'name' => 'admin_discord_webhook_url',
             'value' => 'http://'
         ]);
 
-        DB::table('buyback_admin_config')->insert([
+        DB::table('depo_buyback_admin_config')->insert([
             'name' => 'admin_discord_status',
             'value' => 0
         ]);
 
-        DB::table('buyback_admin_config')->insert([
+        DB::table('depo_buyback_admin_config')->insert([
             'name' => 'admin_discord_webhook_color',
             'value' => '#1928f5'
         ]);
 
-        DB::table('buyback_admin_config')->insert([
+        DB::table('depo_buyback_admin_config')->insert([
             'name' => 'admin_discord_webhook_bot_name',
             'value' => 'SeAT BuyBack Notification'
         ]);

@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSeatBuybackAdminConfigTable extends Migration {
+class DepoCreateSeatBuybackAdminConfigTable extends Migration {
 
     /**
      * Run the migrations.
@@ -33,7 +33,7 @@ class CreateSeatBuybackAdminConfigTable extends Migration {
      */
     public function up(): void
     {
-        Schema::create('buyback_admin_config', function (Blueprint $table): void {
+        Schema::create('depo_buyback_admin_config', function (Blueprint $table): void {
             $table->increments('id');
             $table->string('name');
             $table->string('value');
@@ -49,22 +49,22 @@ class CreateSeatBuybackAdminConfigTable extends Migration {
      */
     private function init() : void  {
 
-        DB::table('buyback_admin_config')->insert([
+        DB::table('depo_buyback_admin_config')->insert([
            'name' => 'admin_price_cache_time',
            'value' => '3600'
         ]);
 
-        DB::table('buyback_admin_config')->insert([
+        DB::table('depo_buyback_admin_config')->insert([
             'name' => 'admin_max_allowed_items',
             'value' => '20'
         ]);
 
-        DB::table('buyback_admin_config')->insert([
+        DB::table('depo_buyback_admin_config')->insert([
             'name' => 'admin_contract_contract_to',
             'value' => 'EVECharacter'
         ]);
 
-        DB::table('buyback_admin_config')->insert([
+        DB::table('depo_buyback_admin_config')->insert([
             'name' => 'admin_contract_expiration',
             'value' => '4 Weeks'
         ]);
@@ -77,6 +77,6 @@ class CreateSeatBuybackAdminConfigTable extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('buyback_admin_config');
+        Schema::dropIfExists('depo_buyback_admin_config');
     }
 }

@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSeatBuybackMarketConfigTable extends Migration {
+class DepoCreateSeatBuybackMarketConfigTable extends Migration {
 
     /**
      * Run the migrations.
@@ -33,7 +33,7 @@ class CreateSeatBuybackMarketConfigTable extends Migration {
      */
     public function up(): void
     {
-        Schema::create('buyback_market_config', function (Blueprint $table): void {
+        Schema::create('depo_buyback_market_config', function (Blueprint $table): void {
             $table->integer('typeId')->primary();
             $table->string('typeName');
             $table->tinyInteger('marketOperationType');
@@ -51,6 +51,6 @@ class CreateSeatBuybackMarketConfigTable extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('buyback_market_config');
+        Schema::dropIfExists('depo_buyback_market_config');
     }
 }

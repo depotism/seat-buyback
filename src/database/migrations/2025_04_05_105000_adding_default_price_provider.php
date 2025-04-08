@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddingDefaultPriceProvider extends Migration {
+class DepoAddingDefaultPriceProvider extends Migration {
 
     /**
      * Run the migrations.
@@ -34,7 +34,7 @@ class AddingDefaultPriceProvider extends Migration {
      */
     public function up(): void
     {
-        DB::table('buyback_admin_config')->insert([
+        DB::table('depo_buyback_admin_config')->insert([
             'name' => 'defaultPriceProvider',
             'value' => '1'
         ]);

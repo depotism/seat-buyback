@@ -37,7 +37,7 @@ class BuybackMarketConfigGroups extends Model {
      *
      * @var string
      */
-    protected $table = 'buyback_market_config_groups';
+    protected $table = 'depo_buyback_market_config_groups';
 
     /**
      * Indicates if the model's ID is auto-incrementing.

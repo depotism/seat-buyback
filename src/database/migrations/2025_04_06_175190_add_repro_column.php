@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddReproColumn extends Migration {
+class DepoAddReproColumn extends Migration {
 
     /**
      * Run the migrations.
@@ -33,10 +33,10 @@ class AddReproColumn extends Migration {
      */
     public function up(): void
     {
-        Schema::table('buyback_market_config', function($table): void {
+        Schema::table('depo_buyback_market_config', function($table): void {
             $table->boolean('repro')->after('percentage')->default(false);
         });
-        Schema::table('buyback_market_config_groups', function($table): void {
+        Schema::table('depo_buyback_market_config_groups', function($table): void {
             $table->boolean('repro')->after('percentage')->default(false);
         });        
     }
@@ -48,11 +48,11 @@ class AddReproColumn extends Migration {
      */
     public function down(): void
     {
-        Schema::table('buyback_market_config_groups', function($table): void {
+        Schema::table('depo_buyback_market_config_groups', function($table): void {
             $table->dropColumn('repro');
         });
 
-        Schema::table('buyback_market_config', function($table): void {
+        Schema::table('depo_buyback_market_config', function($table): void {
             $table->dropColumn('repro');
         });        
     }

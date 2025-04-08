@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddingPriceProviderUrlConfigValue extends Migration {
+class DepoAddingPriceProviderUrlConfigValue extends Migration {
 
     /**
      * Run the migrations.
@@ -33,7 +33,7 @@ class AddingPriceProviderUrlConfigValue extends Migration {
      */
     public function up(): void
     {
-        DB::table('buyback_admin_config')->insert([
+        DB::table('depo_buyback_admin_config')->insert([
             'name' => 'admin_price_provider_url',
             'value' => 'http://'
         ]);

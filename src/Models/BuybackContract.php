@@ -37,7 +37,7 @@ class BuybackContract extends Model
      *
      * @var string
      */
-    protected $table = 'buyback_contracts';
+    protected $table = 'depo_buyback_contracts';
 
     /**
      * Indicates if the model's ID is auto-incrementing.

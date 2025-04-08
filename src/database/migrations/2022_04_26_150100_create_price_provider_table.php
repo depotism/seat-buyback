@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePriceProviderTable extends Migration
+class DepoCreatePriceProviderTable extends Migration
 {
     /**
      * Run the migrations.
@@ -33,7 +33,7 @@ class CreatePriceProviderTable extends Migration
      */
     public function up(): void
     {
-        Schema::create('buyback_price_provider', function (Blueprint $table): void {
+        Schema::create('depo_buyback_price_provider', function (Blueprint $table): void {
             $table->increments('id');
             $table->string('name');
             $table->timestamps();
@@ -45,17 +45,17 @@ class CreatePriceProviderTable extends Migration
 
     public function init(): void {
 
-        DB::table('buyback_price_provider')->insert([
+        DB::table('depo_buyback_price_provider')->insert([
             'name' => 'EveMarketer',
         ]);
 
-        DB::table('buyback_price_provider')->insert([
+        DB::table('depo_buyback_price_provider')->insert([
             'name' => 'EvePraisal',
         ]);
 
 
         //Adding initial price provider
-        DB::table('buyback_admin_config')->insert([
+        DB::table('depo_buyback_admin_config')->insert([
             'name' => 'admin_price_provider',
             'value' => '1'
         ]);
@@ -68,6 +68,6 @@ class CreatePriceProviderTable extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('buyback_price_provider');
+        Schema::dropIfExists('depo_buyback_price_provider');
     }
 }

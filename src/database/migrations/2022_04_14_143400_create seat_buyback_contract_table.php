@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSeatBuybackContractTable extends Migration {
+class DepoCreateSeatBuybackContractTable extends Migration {
 
     /**
      * Run the migrations.
@@ -33,7 +33,7 @@ class CreateSeatBuybackContractTable extends Migration {
      */
     public function up(): void
     {
-        Schema::create('buyback_contracts', function (Blueprint $table): void {
+        Schema::create('depo_buyback_contracts', function (Blueprint $table): void {
             $table->string('contractId')->primary();
             $table->string('contractIssuer');
             $table->text('contractData');
@@ -51,6 +51,6 @@ class CreateSeatBuybackContractTable extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('buyback_contracts');
+        Schema::dropIfExists('depo_buyback_contracts');
     }
 }

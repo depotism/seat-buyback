@@ -32,7 +32,7 @@ class BuybackAdminConfig extends Model {
      *
      * @var string
      */
-    protected $table = 'buyback_admin_config';
+    protected $table = 'depo_buyback_admin_config';
 
     /**
      * Indicates if the model's ID is auto-incrementing.

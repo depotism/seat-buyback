@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class RemovingEveMarketerPriceProvider extends Migration {
+class DepoRemovingEveMarketerPriceProvider extends Migration {
 
     /**
      * Run the migrations.
@@ -34,7 +34,7 @@ class RemovingEveMarketerPriceProvider extends Migration {
      */
     public function up(): void
     {
-        DB::table('buyback_price_provider')
+        DB::table('depo_buyback_price_provider')
             ->where('name', 'EveMarketer')
             ->delete();
     }

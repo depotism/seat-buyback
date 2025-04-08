@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddingPriceProviderToMarketConfig extends Migration {
+class DepoAddingPriceProviderToMarketConfig extends Migration {
 
     /**
      * Run the migrations.
@@ -33,7 +33,7 @@ class AddingPriceProviderToMarketConfig extends Migration {
      */
     public function up(): void
     {
-        Schema::table('buyback_market_config', function($table): void {
+        Schema::table('depo_buyback_market_config', function($table): void {
             $table->integer('provider')->after('percentage')->nullable()->default(null);
         });
     }
@@ -45,7 +45,7 @@ class AddingPriceProviderToMarketConfig extends Migration {
      */
     public function down(): void
     {
-        Schema::table('buyback_market_config', function($table): void {
+        Schema::table('depo_buyback_market_config', function($table): void {
             $table->dropColumn('provider');
         });
     }
