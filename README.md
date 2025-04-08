@@ -8,11 +8,25 @@ A module for [SeAT](https://github.com/eveseat/seat) that makes your life with c
 In case of problems please contact me via EVE-Online message or over the seat discord: `depotism`
 
 ## Screenshots
-![adminpanel](https://i.imgur.com/1c3sdA6.png)
+This repro is based on [H4zz4rdDev/seat-buyback](https://github.com/H4zz4rdDev/seat-buyback)'s seat buyback plugin. 
 
-![requestpanel](https://i.imgur.com/CC7NtH3.png)
+So what is the difference?
+1. I work with Seat 5!
+2. We use the Seat 5 [SeAT Price Provider System Core](https://github.com/recursivetree/seat-prices-core) - i would add the [EvePraisal Price Provider](https://github.com/recursivetree/seat-prices-evepraisal)
+3. You can set the price provider of your choice! 
+4. ... even on per item base!
+5. In h4zzard's version you had to add item by item manually. 
+6. ... here you can even paste a list of items
+7. ... or: even add a whole category of items!
+8. tired of using compressed random ore values? No Problem: pay the buyback by reprocessed value! 
 
-![contracts](https://i.imgur.com/faV829v.png)
+## Screenshots
+![contractoverview](https://raw.githubusercontent.com/depotism/seat-buyback/refs/heads/master/img/contract_overview.png)
+
+![itemconfig](https://raw.githubusercontent.com/depotism/seat-buyback/refs/heads/master/img/item_config.png)
+
+![itemoverview](https://raw.githubusercontent.com/depotism/seat-buyback/refs/heads/master/img/item_overview.png)
+
 
 ## Permissions
 There are three different types of permissions you can give to your members:
@@ -44,7 +58,7 @@ How can I get my channel webhook url?
 
 Example:
 
-![discordexample](https://i.imgur.com/Y3BExAi.png)
+![discord](https://raw.githubusercontent.com/depotism/seat-buyback/refs/heads/master/img/discord_notification.png)
 
 ## Quick Installation Guide:
 I can also recommend reading through the [official seat documentation](https://eveseat.github.io/docs/community_packages/).

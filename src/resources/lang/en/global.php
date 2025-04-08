@@ -127,6 +127,6 @@ return [
     'admin_group_select_label' => 'Select a group',    
     'admin_group_title_groups' => 'Group Overview',
     'admin_group_table_group_name' => 'GroupName',
-    'admin_item_repro_description' => 'Either to use the repro value or not. Very helpful for (compressed) Ores',
+    'admin_item_repro_description' => 'Either to use the repro value or not. Very helpful for (compressed) Ores. ATTENTION! You will get 100% repro value. There is no repro efficiency priced in! MAX Repro for Ore: 90,63% - Gas: 95% - Scrap: 55%',
     'admin_item_repro_label' => 'Reprocessed Value?',
 ];
