@@ -9,7 +9,8 @@ class PriceableEveItem extends EveItem implements IPriceable
 {
     public bool $repro = false;
     public int $provider = -1;
-    public PriceableEveItem $parent;
+    // public PriceableEveItem $parent;
+    public $isReproResult = false;
 
     public function getTypeID(): int
     {

@@ -19,8 +19,8 @@
     <div id="accordion">
         @foreach($contracts as $contract)
             @php
-                $contractFinalPrice = number_format(Depotism\Seat\SeatBuyback\Helpers\PriceCalculationHelper::calculateFinalPrice(
-                    json_decode($contract->contractData, true)["parsed"]),0,',', '.')
+                // $contractFinalPrice = number_format(Depotism\Seat\SeatBuyback\Helpers\PriceCalculationHelper::calculateFinalPrice(json_decode($contract->contractData, true)["parsed"]),0,',', '.')
+                $contractFinalPrice = number_format($contract->price,0,',', '.');
             @endphp
         <div class="card">
             <div class="card-header border-secondary" data-toggle="collapse" data-target="#collapse_{{ $contract->contractId }}"
@@ -61,14 +61,18 @@
                                         <b>{{ $item->typeQuantity }} x {{ $item->typeName }}</b>
                                         ( {!! $item->marketConfig->marketOperationType == 0 ? '-' : '+' !!}{{$item->marketConfig->percentage }}% )
                                     </td>
+
+                                    @if($item->repro)
+                                    <td class="isk-td"><span class="isk-info">REPROCESSED</span></td>
+                                    @else
                                     <td class="isk-td"><span class="isk-info">{{ number_format($item->typeSum,0,',', '.') }}</span> {{ trans('buyback::global.currency') }}</td>
+                                    @endif                                    
                                 </tr>
                             @endforeach
                             <tr>
                                 <td class="align-centered"><b>Summary</b></td>
                                 <td class="align-centered isk-td"><b><span class="isk-info">+
-                                            {{ number_format(Depotism\Seat\SeatBuyback\Helpers\PriceCalculationHelper::calculateFinalPrice(
-                                                json_decode($contract->contractData, true)["parsed"]),0,',', '.') }}</span> {{ trans('buyback::global.currency') }}</b></td>
+                                            {{ $contractFinalPrice }}</span> {{ trans('buyback::global.currency') }}</b></td>
                             </tr>
                         </tbody>
                     </table>

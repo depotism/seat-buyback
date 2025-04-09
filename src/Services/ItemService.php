@@ -75,6 +75,8 @@ class ItemService
         // i know it is not nice. but we need to split the results because we have different price providers now. 
         $sorted = [];
         $repro = [];
+        $repro_arr = [];
+
         // dd($parser_result->items);
         foreach ($parser_result->items as $item) {
             $marketConfig = BuybackMarketConfig::where('typeId', $item->getTypeID())->first();
@@ -118,22 +120,37 @@ class ItemService
                 ->where('it.typeID', '=', $item->getTypeID())
                 ->get();            
             
+            // add temporary item array, to collect all
             foreach ($result as $db_item) {
-                // create instance of invType
-                // give invType to the priceable item
-                $repro_item = new PriceableEveItem($db_item);
-                $repro_item->parent = $item;
-                $repro_item->amount = (int)(($item->amount / $item->typeModel->portionSize)* $db_item->quantity); //  
-                $repro_item->provider = $provider;
-
-                if (array_key_exists($provider, $repro)) {
-                    $repro[$provider]->push($repro_item);
+                if (array_key_exists($db_item->typeID, $repro_arr)) {
+                    $repro_arr[$db_item->typeID] += (int)(($item->amount / $item->typeModel->portionSize)* $db_item->quantity);
                 } else {
-                    $repro[$provider] = collect([$repro_item]);
-                }            
+                    $repro_arr[$db_item->typeID] = (int)(($item->amount / $item->typeModel->portionSize)* $db_item->quantity);
+                }                   
+                
             }
         }
-        //dd($repro); //
+        // dd($repro_arr);
+
+        // move the items to the new array
+        foreach ($repro_arr as $id => $db_item) {
+            // create instance of invType
+            // give invType to the priceable item
+            $repro_item = new PriceableEveItem(InvType::where('typeID', $id)->first());
+            $repro_item->amount = (int)$db_item; //  
+            $repro_item->provider = $provider;
+            $repro_item->isReproResult = true;
+
+
+            if (array_key_exists($provider, $repro)) {
+                $repro[$provider]->push($repro_item);
+            } else {
+                $repro[$provider] = collect([$repro_item]);
+            }            
+        }
+        // dd($repro); //
+
+        $parsedRawData = [];
 
         // loop through all repro stuff
         foreach ($repro as $provider => $items) {
@@ -144,7 +161,21 @@ class ItemService
                 // dd($e);
                 return redirect()->back()->with('error',$e->getMessage());
             }
-        }        
+
+
+            foreach ($items as $item) {
+                $key = $item->getTypeID();
+
+                $parsedRawData[$key]["name"] = $item->getTypeName();
+                $parsedRawData[$key]["quantity"] = $item->amount;
+                $parsedRawData[$key]["typeID"] = $item->getTypeID();
+                $parsedRawData[$key]["priceProvider"] = $provider;
+                $parsedRawData[$key]["repro"] = $item->repro;
+                $parsedRawData[$key]["isReproResult"] = $item->isReproResult;                
+                $parsedRawData[$key]["price"] = $item->price;//$priceData->getItemPrice();
+                $parsedRawData[$key]["sum"] = $item->price;//PriceCalculationHelper::calculateItemPrice($item->getTypeID(), $item->amount, new BuybackPriceData($item->getTypeID(), $item->price));
+            }        
+        }
         //dd($repro); 
         // dd('too far');
 
@@ -161,25 +192,30 @@ class ItemService
                 $key = $item->getTypeID();
 
                 // if we have to calculate the repro stuff we need to go through here and set the item->price.
-                if ($item->repro) {
-                    $item->price = 0;
+                // if ($item->repro) {
+                //     $item->price = 0;
 
-                    foreach ($repro[$item->provider] as $repro_itm) {    
-                        if ($repro_item->parent != $item) continue; // skip if it does not belong to us.
+                //     foreach ($repro[$item->provider] as $repro_itm) {    
+                //         if ($repro_item->parent != $item) continue; // skip if it does not belong to us.
 
-                        $item->price += $repro_itm->price;
-                    }
-                    // dd($item->price);
-                }
+                //         $item->price += $repro_itm->price;
+                //     }
+                //     // dd($item->price);
+                // }
 
-    
-                $parsedRawData[$key]["price"] = $item->price;//$priceData->getItemPrice();
                 $parsedRawData[$key]["name"] = $item->getTypeName();
                 $parsedRawData[$key]["quantity"] = $item->amount;
                 $parsedRawData[$key]["typeID"] = $item->getTypeID();
                 $parsedRawData[$key]["priceProvider"] = $provider;
                 $parsedRawData[$key]["repro"] = $item->repro;
-                $parsedRawData[$key]["sum"] = PriceCalculationHelper::calculateItemPrice($item->getTypeID(), $item->amount, new BuybackPriceData($item->getTypeID(), $item->price));
+                $parsedRawData[$key]["isReproResult"] = $item->isReproResult;                
+                $parsedRawData[$key]["price"] = 0;
+                $parsedRawData[$key]["sum"] = 0;
+                // if the item is not valued at the reprocessed value then ignore that here.
+                if (!$item->repro) {
+                    $parsedRawData[$key]["price"] = $item->price;//$priceData->getItemPrice();
+                    $parsedRawData[$key]["sum"] = PriceCalculationHelper::calculateItemPrice($item->getTypeID(), $item->amount, new BuybackPriceData($item->getTypeID(), $item->price));
+                }
             }
         }
 
@@ -194,6 +230,28 @@ class ItemService
     {
         $parsedItems = [];
         foreach ($itemData as $key => $item) {
+            // handle repro data... 
+            if ($item["isReproResult"]) {
+                if (!array_key_exists($key, $parsedItems)) {
+                    $parsedItems["reprocessed"][$key]["typeId"] = $item["typeID"];
+                    $parsedItems["reprocessed"][$key]["typeName"] = $item["name"];
+                    $parsedItems["reprocessed"][$key]["typeQuantity"] = $item["quantity"];
+                    $parsedItems["reprocessed"][$key]["typeSum"] = $item["sum"];
+                    $parsedItems["reprocessed"][$key]["provider"] = $item["priceProvider"];
+                    // $parsedItems["reprocessed"][$key]["groupId"] = $result->groupID;
+                    // $parsedItems["reprocessed"][$key]["repro"] = (bool)$result->repro;
+                    // $parsedItems["reprocessed"][$key]["marketGroupName"] = $result->groupName;
+
+                    // $parsedItems["parsed"][$key]["marketConfig"] = [
+                    //     'percentage' => $result->percentage != null ? $result->percentage : 0,
+                    //     'marketOperationType' => $result->marketOperationType != null ? $result->marketOperationType : 0
+                    // ];
+                }     
+                //dd($parsedItems);
+                continue;       
+            }
+
+
             $result = DB::table('invTypes as it')
                 ->join('invGroups as ig', 'it.groupID', '=', 'ig.GroupID')
                 ->rightJoin('depo_buyback_market_config as bmc', 'it.typeID', '=', 'bmc.typeId')
@@ -227,7 +285,6 @@ class ItemService
             }
 
             if (!array_key_exists($result->groupID, $parsedItems)) {
-
                 $parsedItems["parsed"][$key]["typeId"] = $item["typeID"];
                 $parsedItems["parsed"][$key]["typeName"] = $item["name"];
                 $parsedItems["parsed"][$key]["typeQuantity"] = $item["quantity"];

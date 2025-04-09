@@ -95,12 +95,13 @@ class BuybackContractController extends Controller {
             'contractData' => 'required',
             'contractFinalPrice' => 'required'
         ]);
+        $contractFinalPrice = (int)$request->get('contractFinalPrice');
 
         $contract = new BuybackContract();
         $contract->contractId = $request->get('contractId');
         $contract->contractIssuer = Auth::user()->name;
         $contract->contractData = $request->get('contractData');
-        $contractFinalPrice = (int)$request->get('contractFinalPrice');
+        $contract->price = $contractFinalPrice;
         $contract->save();
 
         if((bool)$this->settingsService->get("admin_discord_status")) {

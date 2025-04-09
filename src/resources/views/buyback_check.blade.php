@@ -22,14 +22,26 @@
                         <tr>
                             <td><img src="https://images.evetech.net/types/{{ $item["typeId"] }}/icon?size=32"/>
                                 <b>{{ number_format($item["typeQuantity"],0,',', '.') }} x {{ $item["typeName"] }}</b>
-                                ( {!! $item["marketConfig"]["marketOperationType"] == 0 ? '-' : '+' !!}{{$item["marketConfig"]["percentage"]}}% {{RecursiveTree\Seat\PricesCore\Models\PriceProviderInstance::find($item['provider'])->name}} )
-                                @if($item['repro'])
-                                [REPRO VALUE]
-                                @endif
+                                ( {!! $item["marketConfig"]["marketOperationType"] == 0 ? '-' : '+' !!}{{$item["marketConfig"]["percentage"]}}% {{RecursiveTree\Seat\PricesCore\Models\PriceProviderInstance::find($item['provider'])->name}} )                               
                             </td>
+                            @if($item['repro'])
+                            <td class="isk-td"><span class="isk-info">REPROCESSED</span></td>
+                            @else
                             <td class="isk-td"><span class="isk-info">+{{ number_format($item["typeSum"],0,',', '.') }}</span> {{ trans('buyback::global.currency') }}</td>
+                            @endif
                         </tr>
                     @endforeach
+                    @if(array_key_exists("reprocessed", $eve_item_data))
+                        @foreach($eve_item_data["reprocessed"] as $item)
+                        <tr>
+                            <td><img src="https://images.evetech.net/types/{{ $item["typeId"] }}/icon?size=32"/>
+                                <b>{{ number_format($item["typeQuantity"],0,',', '.') }} x {{ $item["typeName"] }}</b> [REPRO VALUE]
+                            </td>
+                            <td class="isk-td"><span class="isk-info">+{{ number_format($item["typeSum"],0,',', '.') }}</span> {{ trans('buyback::global.currency') }}</td>
+                        </tr>  
+                        @endforeach                  
+                    @endif
+
                     <tr>
                         <td class="align-centered"><b>{{ trans('buyback::global.step_two_summary') }}</b></td>
                         <td class="align-centered isk-td"><b><span class="isk-info">+{{ number_format($finalPrice,0,',', '.') }}</span> {{ trans('buyback::global.currency') }}</b></td>
@@ -38,6 +50,7 @@
                 </table>
             </div>
         </div>
+
         @if(array_key_exists("ignored", $eve_item_data) && count($eve_item_data["ignored"]) > 0)
             <div class="card">
                 <div class="card-body">

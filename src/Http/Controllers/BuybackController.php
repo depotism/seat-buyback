@@ -104,6 +104,7 @@ class BuybackController extends Controller
             }
 
             $finalPrice = Helpers\PriceCalculationHelper::calculateFinalPrice($parsedItems["parsed"]);
+            $finalPrice += Helpers\PriceCalculationHelper::calculateFinalPrice($parsedItems["reprocessed"]);
 
             return view('buyback::buyback_check', [
                 'eve_item_data' => $parsedItems,
