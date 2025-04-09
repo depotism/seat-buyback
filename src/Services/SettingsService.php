@@ -60,7 +60,7 @@ class SettingsService {
         }
 
         try {
-            DB::table('buyback_admin_config')
+            DB::table('depo_buyback_admin_config')
                 ->where('name', $key)
                 ->update(['value' => $value]);
         } catch (QueryException $e) {
