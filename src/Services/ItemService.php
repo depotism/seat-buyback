@@ -103,6 +103,7 @@ class ItemService
             // if we dont need to repro we will just skip
             if (! $item->repro) continue;
 
+            //dd($marketConfig);
             // check for the materials
             $result = DB::table('invTypes as it')
                 ->join('invTypeMaterials as iam', 'iam.typeID', '=', 'it.typeID')
@@ -123,9 +124,9 @@ class ItemService
             // add temporary item array, to collect all
             foreach ($result as $db_item) {
                 if (array_key_exists($db_item->typeID, $repro_arr)) {
-                    $repro_arr[$db_item->typeID] += (int)(($item->amount / $item->typeModel->portionSize)* $db_item->quantity);
-                } else {
-                    $repro_arr[$db_item->typeID] = (int)(($item->amount / $item->typeModel->portionSize)* $db_item->quantity);
+                    $repro_arr[$db_item->typeID] += (int)(($item->amount / $item->typeModel->portionSize)* $db_item->quantity) * (1-($marketConfig->percentage / 100)); 
+                } else { // added  * (1-($marketConfig->percentage / 100)) to reduce the amount of reprocessed materials
+                    $repro_arr[$db_item->typeID] = (int)(($item->amount / $item->typeModel->portionSize)* $db_item->quantity) * (1-($marketConfig->percentage / 100));
                 }                   
                 
             }
