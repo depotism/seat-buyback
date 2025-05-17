@@ -17,7 +17,7 @@ class AssetWindowParser extends Parser
 
         $lines = self::matchLines($expr, $text);
 
-        dd($lines);           
+        //dd($lines);           
 
         //check if there are any matches
         if($lines->whereNotNull("match")->isEmpty()) return null;
