@@ -12,9 +12,12 @@ class AssetWindowParser extends Parser
     protected static function parse(string $text, string $EveItemClass): ?ParseResult
     {
         // include translation star
-        $expr = "^(?<name>[^\t*]+)\*?\t(?<amount>(\d*\.?\d*)?)";
+        //$expr = "^(?<name>[^\t*]+)\*?\t(?<amount>(\d*\.?\d*)?)";   
+        $expr = "^(?<name>[^\t*]+)\*?\t(?<amount>(\d*\.?\d*\.?\d*\.?\d*\.?\d*)?)"; // fixed to add higher numbers....
 
         $lines = self::matchLines($expr, $text);
+
+        dd($lines);           
 
         //check if there are any matches
         if($lines->whereNotNull("match")->isEmpty()) return null;
@@ -44,7 +47,7 @@ class AssetWindowParser extends Parser
 
             $item = new $EveItemClass($inv_model);            
             $item->amount = intval(str_replace([".", " ", ","], "", $line->match->amount));
-            // dd($item);
+            //dd($item);
             $items[] = $item;
         }
 

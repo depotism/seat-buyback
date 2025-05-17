@@ -192,7 +192,7 @@
                     <h3 class="card-title">{{ trans('buyback::global.admin_group_title_groups') }}</h3>
                 </div>
                 <div class="card-body">
-                    <table id="items" class="table .table-sm">
+                    <table id="groups" class="table .table-sm">
                         <thead>
                         <th>{{ trans('buyback::global.admin_group_table_group_name') }}</th>
                         <th class="text-center"><i class="fas fa-arrow-down"></i>/<i class="fas fa-arrow-up">{{ trans('buyback::global.admin_group_table_jita') }}</th>
@@ -212,7 +212,7 @@
                                     <td class="text-center align-middle">{{ ($config->price <= 0) ? $config->percentage . " %" : "-" }}</td>
                                     <td class="text-center align-middle">{{ RecursiveTree\Seat\PricesCore\Models\PriceProviderInstance::find($config->provider)->name }}</td>
                                     <td class="text-center align-middle">{{ ( $config->repro == 0 ) ? "-" : "Yes" }}</td>
-                                    <td class="text-center mb-4 mt-4 align-middle"><button class="btn btn-danger btn-xs form-control" id="submit" type="submit"><i class="fas fa-trash-alt"></i>{{ trans('buyback::global.admin_group_table_button') }}</button></td>
+                                    <td class="text-center mb-4 mt-4 align-middle"><button class="btn btn-danger btn-xs form-control" id="submitgroup" type="submit"><i class="fas fa-trash-alt"></i>{{ trans('buyback::global.admin_group_table_button') }}</button></td>
                                     </form>
                                 </tr>
                             @endforeach
