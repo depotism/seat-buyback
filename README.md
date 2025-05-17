@@ -15,7 +15,7 @@ So what is the difference?
 2. We use the Seat 5 [SeAT Price Provider System Core](https://github.com/recursivetree/seat-prices-core) - i would add the [EvePraisal Price Provider](https://github.com/recursivetree/seat-prices-evepraisal)
 3. You can set the price provider of your choice! 
 4. ... even on per item base!
-5. In h4zzard's version you had to add item by item manually. 
+5. In H4zz4rd's version you had to add item by item manually. 
 6. ... here you can even paste a list of items
 7. ... or: even add a whole category of items!
 8. tired of using compressed random ore values? No Problem: pay the buyback by reprocessed value! 
